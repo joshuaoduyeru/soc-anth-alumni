@@ -210,6 +210,7 @@ export const useAlumniStore = create<AlumniStore>()(
       currentUser: null,
       
       setCurrentUser: (user) => set({ currentUser: user }),
+      logout: () => set({ currentUser: null }),
       
       // Alumni
       addAlumni: (data) => set((state) => ({
