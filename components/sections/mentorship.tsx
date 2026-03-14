@@ -244,11 +244,13 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
             })}
           </div>
         ) : (
-          <Empty
-            icon={<Users className="h-12 w-12" />}
-            title="No mentors registered yet"
-            description="Be the first to register as a mentor and help fellow alumni!"
-          />
+          <div className="flex flex-col items-center justify-center p-12 bg-card border border-dashed rounded-xl text-center">
+            <Users className="h-12 w-12" />
+            <h3 className="text-lg font-semibold">No mentors registered yet</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Be the first to register as a mentor and help fellow alumni!
+            </p>
+          </div>
         )}
       </div>
 

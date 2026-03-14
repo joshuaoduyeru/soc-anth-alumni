@@ -318,11 +318,13 @@ export function JobsSection() {
             })}
           </div>
         ) : (
-          <Empty
-            icon={<Briefcase className="h-12 w-12" />}
-            title="No jobs posted yet"
-            description="Be the first to post a job opportunity!"
-          />
+          <div className="flex flex-col items-center justify-center p-12 bg-card border border-dashed rounded-xl text-center">
+            <Briefcase className="h-12 w-12" />
+            <h3 className="text-lg font-semibold">No jobs posted yet</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Be the first to post a job opportunity!
+            </p>
+          </div>
         )}
       </div>
 

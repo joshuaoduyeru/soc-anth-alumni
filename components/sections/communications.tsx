@@ -203,11 +203,13 @@ export function CommunicationsSection() {
                   ))}
                 </div>
               ) : (
-                <Empty
-                  icon={<Inbox className="h-10 w-10" />}
-                  title="No messages sent yet"
-                  description="Compose a newsletter to get started."
-                />
+                <div className="flex flex-col items-center justify-center p-12 bg-card border border-dashed rounded-xl text-center">
+                  <Inbox className="h-10 w-10" />
+                  <h3 className="text-lg font-semibold">No messages sent yet</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Compose a newsletter to get started.
+                  </p>
+                </div>
               )}
             </div>
           </div>
