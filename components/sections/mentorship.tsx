@@ -287,7 +287,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
                   <FieldLabel>Availability</FieldLabel>
                   <Select
                     value={form.watch("availability")}
-                    onValueChange={(v) => form.setValue("availability", v as Mentor["availability"])}
+                    onValueChange={(v) => form.setValue("availability", v as unknown as Mentor["availability"])}
                   >
                     <SelectTrigger>
                       <SelectValue />
