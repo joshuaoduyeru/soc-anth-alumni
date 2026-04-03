@@ -62,6 +62,7 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
       toast.info("Request already sent.")
       return
     }
+    if (mentor.id === undefined) return
     requestMentorship(mentor.id, currentUser?.id || null)
     toast.success(`Mentorship request sent to ${alumniRecord.firstName}!`)
   }
