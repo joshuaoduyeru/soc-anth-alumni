@@ -223,7 +223,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
 
                   {/* Action Button */}
                   <button
-                    onClick={() => handleRequestMentorship(mentor.id, name)}
+                    onClick={() => mentor.id !== undefined && handleRequestMentorship(mentor.id, name)}
                     disabled={hasRequested}
                     className={`w-full py-2 px-4 rounded-lg font-bold text-sm transition-all ${
                       hasRequested
