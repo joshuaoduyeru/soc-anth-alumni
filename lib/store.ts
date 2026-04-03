@@ -93,13 +93,13 @@ export interface Communication {
 
 export interface EventRegistration {
   eventId: string | number
-  userId: string | null
+  userId: string | number | null
   ts: string
 }
 
 export interface MentorRequest {
   mentorId: string | number
-  userId: string | null
+  userId: string | number | null
   ts: string
 }
 
@@ -200,8 +200,8 @@ interface AlumniStore {
   addEvent: (event: Omit<Event, '_id' | 'id'>) => Promise<Event | null>
   updateEvent: (id: string | number, data: Partial<Event>) => Promise<boolean>
   deleteEvent: (id: string | number) => Promise<boolean>
-  registerEvent: (eventId: string | number, userId: string | null) => void
-  unregisterEvent: (eventId: string | number, userId: string | null) => void
+  registerEvent: (eventId: string | number, userId: string | number | null) => void
+  unregisterEvent: (eventId: string | number, userId: string | number | null) => void
   
   // Jobs CRUD
   addJob: (job: Omit<Job, '_id' | 'id'>) => Promise<Job | null>
@@ -211,7 +211,7 @@ interface AlumniStore {
   
   // Mentors
   addMentor: (mentor: Omit<Mentor, '_id' | 'id'>) => void
-  requestMentorship: (mentorId: string | number, userId: string | null) => void
+  requestMentorship: (mentorId: string | number, userId: string | number | null) => void
   
   // Badges
   awardBadge: (badge: Omit<Badge, '_id' | 'id' | 'date'>) => void

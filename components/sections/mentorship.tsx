@@ -71,13 +71,13 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
     return alumni.find((a) => a.id === alumniId || a._id === alumniId)
   }
 
-  const hasRequestedMentorship = (mentorId: number) => {
+  const hasRequestedMentorship = (mentorId: number | string) => {
     return mentorRequests.some(
       (r) => r.mentorId === mentorId && r.userId === currentUser?.id
     )
   }
 
-  const handleRequestMentorship = (mentorId: number, mentorName: string) => {
+  const handleRequestMentorship = (mentorId: number | string, mentorName: string) => {
     if (hasRequestedMentorship(mentorId)) {
       toast.info("Request already sent.")
       return
@@ -99,7 +99,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
 
   const onSubmit = (data: MentorFormData) => {
     addMentor({
-      alumniId: currentUser?.id || alumni[0]?.id || 1,
+      alumniId: currentUser?._id || currentUser?.id || alumni[0]?._id || alumni[0]?.id || "1",
       expertise: data.expertise,
       experience: data.experience ? String(data.experience) : undefined,
       availability: data.availability,
