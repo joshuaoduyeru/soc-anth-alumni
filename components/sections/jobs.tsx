@@ -135,7 +135,7 @@ export function JobsSection() {
   }
 
   const onSubmit = (data: JobFormData) => {
-    if (editingJob) {
+    if (editingJob && editingJob.id != null) {
       updateJob(editingJob.id, data)
       toast.success("Job updated.")
     } else {
