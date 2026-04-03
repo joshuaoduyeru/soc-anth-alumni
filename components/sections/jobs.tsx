@@ -228,6 +228,7 @@ export function JobsSection() {
         {filteredJobs.length > 0 ? (
           <div className="space-y-3">
             {filteredJobs.map((job) => {
+              if (!job.id) return null
               const isSaved = savedJobs.includes(job.id)
               
               return (
