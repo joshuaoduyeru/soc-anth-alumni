@@ -8,7 +8,7 @@ export interface AlumniDoc {
   email: string
   password?: string // hashed
   year: number
-  degree: "Bachelor's" | "Master's" | "PhD"
+  degree: string
   major?: string
   company?: string
   jobTitle?: string
@@ -16,7 +16,9 @@ export interface AlumniDoc {
   location?: string
   linkedin?: string
   bio?: string
-  role: 'alumni'
+  isAdmin?: boolean
+  isVerified?: boolean
+  isMentor?: boolean
   createdAt: Date
   updatedAt: Date
 }

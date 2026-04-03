@@ -22,13 +22,12 @@ interface LoginViewProps {
 }
 
 export function LoginView({ onSwitchToSignup }: LoginViewProps) {
-  const { alumni, setCurrentUser } = useAlumniStore()
+  const { setCurrentUser } = useAlumniStore()
   const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -38,7 +37,6 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
     setIsLoading(true)
     
     try {
-      // Try API login first
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,48 +48,23 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
         setCurrentUser({
           _id: user._id,
           email: user.email,
-          role: user.role,
+          role: user.isAdmin ? "admin" : "alumni",
           name: user.firstName ? `${user.firstName} ${user.lastName}` : user.name || "User",
           firstName: user.firstName,
           lastName: user.lastName,
           id: user._id,
+          isAdmin: user.isAdmin,
         })
         toast.success(`Welcome back, ${user.firstName || "User"}!`)
-        setIsLoading(false)
-        return
+      } else {
+        const error = await res.json()
+        toast.error(error.error || "Invalid credentials. Please check your email and password.")
       }
     } catch {
-      // API unavailable, fall back to local auth
-    }
-
-    // Fallback local auth for demo
-    if (data.email === "admin@example.com" && data.password === "admin123") {
-      setCurrentUser({
-        email: data.email,
-        role: "admin",
-        name: "Admin User",
-        id: null,
-      })
-      toast.success("Welcome back, Admin!")
-    } else if (data.email === "alumni@example.com" && data.password === "alumni123") {
-      const alumniRecord = alumni.find((a) => a.email === data.email)
-      setCurrentUser({
-        email: data.email,
-        role: "alumni",
-        name: alumniRecord ? `${alumniRecord.firstName} ${alumniRecord.lastName}` : "Alumni",
-        id: alumniRecord?.id || alumniRecord?._id || null,
-      })
-      toast.success(`Welcome back, ${alumniRecord?.firstName || "Alumni"}!`)
-    } else {
-      toast.error("Invalid credentials. Use a demo account or seed the database.")
+      toast.error("Unable to connect to the server. Please try again later.")
     }
     
     setIsLoading(false)
-  }
-
-  const fillDemoCredentials = (email: string, password: string) => {
-    setValue("email", email)
-    setValue("password", password)
   }
 
   return (
@@ -115,19 +88,9 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
           </h2>
         </div>
         
-        <div className="relative z-10 flex gap-9">
-          <div>
-            <strong className="block font-serif text-3xl text-white">{alumni.length}</strong>
-            <span className="text-xs text-white/45 uppercase tracking-widest">Alumni</span>
-          </div>
-          <div>
-            <strong className="block font-serif text-3xl text-white">0</strong>
-            <span className="text-xs text-white/45 uppercase tracking-widest">Events</span>
-          </div>
-          <div>
-            <strong className="block font-serif text-3xl text-white">0</strong>
-            <span className="text-xs text-white/45 uppercase tracking-widest">Jobs</span>
-          </div>
+        <div className="relative z-10 text-sm text-white/60">
+          Obafemi Awolowo University<br />
+          Department of Sociology & Anthropology
         </div>
       </div>
 
@@ -194,30 +157,7 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
             </p>
           </div>
 
-          {/* Demo Accounts */}
-          <div className="mt-4 p-4 bg-[var(--gold-pale)] border border-[var(--secondary)]/30 rounded-lg">
-            <strong className="block text-sm text-foreground mb-3">Quick Demo Access</strong>
-            <div className="flex gap-2 mb-3">
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials("admin@example.com", "admin123")}
-                className="px-3 py-1.5 bg-[var(--primary)] text-white text-xs font-semibold rounded transition-colors hover:bg-[var(--secondary)] hover:text-[var(--primary)]"
-              >
-                Admin
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials("alumni@example.com", "alumni123")}
-                className="px-3 py-1.5 bg-[var(--primary)] text-white text-xs font-semibold rounded transition-colors hover:bg-[var(--secondary)] hover:text-[var(--primary)]"
-              >
-                Alumni
-              </button>
-            </div>
-            <div className="text-xs text-muted-foreground leading-relaxed">
-              Admin: admin@example.com / admin123<br />
-              Alumni: alumni@example.com / alumni123
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>

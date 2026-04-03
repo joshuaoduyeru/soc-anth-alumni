@@ -8,6 +8,7 @@ export interface Alumni {
   firstName: string
   lastName: string
   email: string
+  password?: string
   year: number
   degree: string
   major?: string
@@ -21,7 +22,7 @@ export interface Alumni {
   skills?: string[]
   isVerified?: boolean
   isMentor?: boolean
-  role?: 'alumni'
+  isAdmin?: boolean
 }
 
 export interface Event {
@@ -110,6 +111,7 @@ export interface User {
   firstName?: string
   lastName?: string
   id?: string | number | null
+  isAdmin?: boolean
 }
 
 export const BADGE_DEFINITIONS = [

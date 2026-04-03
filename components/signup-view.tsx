@@ -32,14 +32,13 @@ interface SignupViewProps {
 }
 
 export function SignupView({ onSwitchToLogin }: SignupViewProps) {
-  const { alumni, addAlumni, setCurrentUser } = useAlumniStore()
+  const { addAlumni, setCurrentUser } = useAlumniStore()
   const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -51,40 +50,40 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true)
     
-    // Check if email already exists locally
-    const existingAlumni = alumni.find((a) => a.email.toLowerCase() === data.email.toLowerCase())
-    if (existingAlumni) {
-      toast.error("An account with this email already exists")
-      setIsLoading(false)
-      return
+    try {
+      // Create via API
+      const newAlumniData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        year: data.year,
+        degree: data.degree,
+        major: data.major,
+      }
+
+      const newAlumni = await addAlumni(newAlumniData)
+
+      if (newAlumni) {
+        // Auto-login the user
+        setCurrentUser({
+          _id: newAlumni._id,
+          email: data.email,
+          role: "alumni",
+          name: `${data.firstName} ${data.lastName}`,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          id: newAlumni._id || newAlumni.id || null,
+          isAdmin: false,
+        })
+        toast.success(`Welcome to OAU-SAN, ${data.firstName}!`)
+      } else {
+        toast.error("Failed to create account. The email may already be in use.")
+      }
+    } catch {
+      toast.error("Unable to connect to the server. Please try again later.")
     }
-
-    // Try to create via API first
-    const newAlumniData = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-      year: data.year,
-      degree: data.degree,
-      major: data.major,
-      role: "alumni" as const,
-    }
-
-    const newAlumni = await addAlumni(newAlumniData)
-
-    // Auto-login the user
-    setCurrentUser({
-      _id: newAlumni?._id,
-      email: data.email,
-      role: "alumni",
-      name: `${data.firstName} ${data.lastName}`,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      id: newAlumni?._id || newAlumni?.id || null,
-    })
-
-    toast.success(`Welcome to OAU-SAN, ${data.firstName}!`)
+    
     setIsLoading(false)
   }
 
@@ -115,19 +114,9 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
           </p>
         </div>
         
-        <div className="relative z-10 flex gap-9">
-          <div>
-            <strong className="block font-serif text-3xl text-white">{alumni.length}+</strong>
-            <span className="text-xs text-white/45 uppercase tracking-widest">Alumni</span>
-          </div>
-          <div>
-            <strong className="block font-serif text-3xl text-white">50+</strong>
-            <span className="text-xs text-white/45 uppercase tracking-widest">Years</span>
-          </div>
-          <div>
-            <strong className="block font-serif text-3xl text-white">Global</strong>
-            <span className="text-xs text-white/45 uppercase tracking-widest">Network</span>
-          </div>
+        <div className="relative z-10 text-sm text-white/60">
+          Obafemi Awolowo University<br />
+          Department of Sociology & Anthropology
         </div>
       </div>
 
@@ -276,12 +265,7 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
             </p>
           </div>
 
-          {/* Demo note */}
-          <div className="mt-4 p-3 bg-[var(--gold-pale)] border border-[var(--secondary)]/30 rounded-lg">
-            <p className="text-xs text-muted-foreground text-center">
-              Demo: You can also <button type="button" onClick={onSwitchToLogin} className="underline font-medium">sign in</button> with existing demo accounts
-            </p>
-          </div>
+          
         </div>
       </div>
     </div>

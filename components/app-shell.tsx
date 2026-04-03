@@ -28,14 +28,10 @@ type Section =
   | "reports"
   | "my-profile"
 
-interface AppShellProps {
-  onLogout: () => void
-}
-
-export function AppShell({ onLogout }: AppShellProps) {
+export function AppShell() {
   const [activeSection, setActiveSection] = useState<Section>("dashboard")
-  const [viewingProfileId, setViewingProfileId] = useState<number | null>(null)
-  const { currentUser } = useAlumniStore()
+  const [viewingProfileId, setViewingProfileId] = useState<number | string | null>(null)
+  const { currentUser, logout } = useAlumniStore()
 
   const navItems: { id: Section; label: string }[] = [
     { id: "dashboard", label: "Dashboard" },
@@ -58,7 +54,7 @@ export function AppShell({ onLogout }: AppShellProps) {
       .slice(0, 2)
   }
 
-  const handleViewProfile = (id: number) => {
+  const handleViewProfile = (id: number | string) => {
     setViewingProfileId(id)
   }
 
@@ -71,7 +67,6 @@ export function AppShell({ onLogout }: AppShellProps) {
       <ProfileDetail
         alumniId={viewingProfileId}
         onBack={handleBackToApp}
-        onLogout={onLogout}
       />
     )
   }
@@ -119,7 +114,7 @@ export function AppShell({ onLogout }: AppShellProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={onLogout}
+            onClick={logout}
             className="text-white/60 border border-white/15 hover:bg-white/10 hover:text-white"
           >
             Sign out

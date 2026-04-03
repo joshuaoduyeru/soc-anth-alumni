@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import clientPromise from "@/lib/mongodb"
+import { getDatabase } from "@/lib/mongodb"
 import { ObjectId } from "mongodb"
 import bcrypt from "bcryptjs"
 
@@ -185,43 +185,50 @@ const initialBadges = [
   },
 ]
 
-const adminUser = {
+// Admin is also an alumni with isAdmin flag
+const adminAlumni = {
   _id: new ObjectId(),
   firstName: "Admin",
   lastName: "User",
   email: "admin@example.com",
   password: bcrypt.hashSync("admin123", 10),
-  role: "admin",
+  year: 2010,
+  degree: "PhD",
+  major: "Sociology",
+  currentJob: "Department Coordinator",
+  company: "OAU",
+  location: "Ile-Ife, Nigeria",
+  bio: "Department administrator managing the alumni network.",
+  isAdmin: true,
+  isVerified: true,
+  isMentor: false,
   createdAt: new Date().toISOString(),
 }
 
 export async function POST() {
   try {
-    const client = await clientPromise
-    const db = client.db("oau-san")
+    const db = await getDatabase()
     
     // Clear existing data
     await db.collection("alumni").deleteMany({})
     await db.collection("events").deleteMany({})
     await db.collection("jobs").deleteMany({})
     await db.collection("badges").deleteMany({})
-    await db.collection("admins").deleteMany({})
     
-    // Insert seed data
-    await db.collection("alumni").insertMany(initialAlumni)
+    // Insert seed data (including admin as alumni with isAdmin: true)
+    const allAlumni = [...initialAlumni, adminAlumni]
+    await db.collection("alumni").insertMany(allAlumni)
     await db.collection("events").insertMany(initialEvents)
     await db.collection("jobs").insertMany(initialJobs)
     await db.collection("badges").insertMany(initialBadges)
-    await db.collection("admins").insertOne(adminUser)
     
     return NextResponse.json({ 
       message: "Database seeded successfully",
       counts: {
-        alumni: initialAlumni.length,
+        alumni: allAlumni.length,
         events: initialEvents.length,
         jobs: initialJobs.length,
         badges: initialBadges.length,
-        admins: 1,
       }
     })
   } catch (error) {

@@ -29,17 +29,16 @@ const badgeIcons: Record<string, React.ReactNode> = {
 }
 
 interface ProfileDetailProps {
-  alumniId: number
+  alumniId: number | string
   onBack: () => void
-  onLogout: () => void
 }
 
-export function ProfileDetail({ alumniId, onBack, onLogout }: ProfileDetailProps) {
-  const { currentUser, alumni, badges, mentors, mentorRequests, deleteAlumni, requestMentorship } = useAlumniStore()
+export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
+  const { currentUser, alumni, badges, mentors, mentorRequests, deleteAlumni, requestMentorship, logout } = useAlumniStore()
   const [deleteConfirm, setDeleteConfirm] = useState(false)
 
-  const alumniRecord = alumni.find((a) => a.id === alumniId)
-  const alumniBadges = badges.filter((b) => b.alumniId === alumniId)
+  const alumniRecord = alumni.find((a) => a.id === alumniId || a._id === alumniId)
+  const alumniBadges = badges.filter((b) => b.alumniId === alumniId || b.alumniId === alumniRecord?._id)
   const mentor = mentors.find((m) => m.alumniId === alumniId)
   const isAdmin = currentUser?.role === "admin"
 
@@ -109,7 +108,7 @@ export function ProfileDetail({ alumniId, onBack, onLogout }: ProfileDetailProps
           <Button
             variant="ghost"
             size="sm"
-            onClick={onLogout}
+            onClick={logout}
             className="text-white/60 border border-white/15 hover:bg-white/10 hover:text-white"
           >
             Sign out
