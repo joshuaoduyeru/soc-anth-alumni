@@ -136,7 +136,7 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
       lastName: alumniRecord.lastName,
       email: alumniRecord.email,
       year: alumniRecord.year,
-      degree: alumniRecord.degree,
+      degree: alumniRecord.degree as "Bachelor's" | "Master's" | "PhD",
       major: alumniRecord.major || "",
       company: alumniRecord.company || "",
       jobTitle: alumniRecord.jobTitle || "",
