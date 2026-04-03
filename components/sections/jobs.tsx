@@ -364,7 +364,12 @@ export function JobsSection() {
                   <FieldLabel>Type</FieldLabel>
                   <Select
                     value={form.watch("type")}
-                    onValueChange={(v) => form.setValue("type", v as Job["type"])}
+                    onValueChange={(v) => {
+                      const validTypes = ["Full-time", "Part-time", "Contract", "Internship"]
+                      if (validTypes.includes(v)) {
+                        form.setValue("type", v as "Full-time" | "Part-time" | "Contract" | "Internship")
+                      }
+                    }}
                   >
                     <SelectTrigger>
                       <SelectValue />
