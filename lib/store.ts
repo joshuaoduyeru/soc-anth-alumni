@@ -141,9 +141,9 @@ export const JOB_ICONS: Record<string, string> = {
 
 // Local fallback data (used when API is unavailable)
 const fallbackAlumni: Alumni[] = [
-  { id: 1, firstName: 'Adebayo', lastName: 'Okonkwo', email: 'alumni@example.com', year: 2018, degree: "BSc", major: 'Sociology', company: 'Nigerian Institute of Social Research', jobTitle: 'Social Research Analyst', phone: '+234 801 234 5678', location: 'Lagos, Nigeria', linkedin: 'https://linkedin.com/in/adebayo', bio: 'Passionate about using sociological research to drive social change in Nigeria.', role: 'alumni' },
-  { id: 2, firstName: 'Chidinma', lastName: 'Eze', email: 'c.eze@oauife.edu.ng', year: 2015, degree: "MSc", major: 'Anthropology', company: 'UNESCO Nigeria', jobTitle: 'Cultural Heritage Consultant', phone: '+234 802 345 6789', location: 'Abuja, Nigeria', bio: 'Dedicated to preserving Nigerian cultural heritage through anthropological research.', role: 'alumni' },
-  { id: 3, firstName: 'Oluwaseun', lastName: 'Adeyemi', email: 'o.adeyemi@oauife.edu.ng', year: 2020, degree: "BSc", major: 'Sociology', company: 'ActionAid Nigeria', jobTitle: 'Community Development Officer', phone: '+234 803 456 7890', location: 'Ile-Ife, Nigeria', bio: 'Working to empower communities through participatory development approaches.', role: 'alumni' },
+  { id: 1, firstName: 'Adebayo', lastName: 'Okonkwo', email: 'alumni@example.com', year: 2018, degree: "BSc", major: 'Sociology', company: 'Nigerian Institute of Social Research', jobTitle: 'Social Research Analyst', phone: '+234 801 234 5678', location: 'Lagos, Nigeria', linkedin: 'https://linkedin.com/in/adebayo', bio: 'Passionate about using sociological research to drive social change in Nigeria.' },
+  { id: 2, firstName: 'Chidinma', lastName: 'Eze', email: 'c.eze@oauife.edu.ng', year: 2015, degree: "MSc", major: 'Anthropology', company: 'UNESCO Nigeria', jobTitle: 'Cultural Heritage Consultant', phone: '+234 802 345 6789', location: 'Abuja, Nigeria', bio: 'Dedicated to preserving Nigerian cultural heritage through anthropological research.' },
+  { id: 3, firstName: 'Oluwaseun', lastName: 'Adeyemi', email: 'o.adeyemi@oauife.edu.ng', year: 2020, degree: "BSc", major: 'Sociology', company: 'ActionAid Nigeria', jobTitle: 'Community Development Officer', phone: '+234 803 456 7890', location: 'Ile-Ife, Nigeria', bio: 'Working to empower communities through participatory development approaches.' },
 ]
 
 const fallbackEvents: Event[] = [
