@@ -334,7 +334,7 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
                         </span>
                         <span>
                           <span className="font-bold text-xs">{def.name}</span>
-                          <span className="block text-[10px] text-muted-foreground">{formatDate(b.date)}</span>
+                          {b.date && <span className="block text-[10px] text-muted-foreground">{formatDate(b.date)}</span>}
                         </span>
                       </span>
                     ) : null
