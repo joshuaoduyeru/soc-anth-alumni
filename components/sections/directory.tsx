@@ -4,14 +4,14 @@ import { useState, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { GraduationCap, Search, Grid3X3, List, Plus, X, Award } from "lucide-react"
+import { Search, Grid3X3, List, Plus, X, Award } from "lucide-react"
 import { useAlumniStore, type Alumni, BADGE_DEFINITIONS } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Empty } from "@/components/ui/empty"
+import { Empty, EmptyMedia, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -402,11 +402,13 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
         )}
 
         {filteredAlumni.length === 0 && (
-          <Empty
-            icon={<GraduationCap className="h-12 w-12" />}
-            title="No alumni found"
-            description="Try adjusting your search or filters."
-          />
+          <Empty>
+              <EmptyHeader>
+                <EmptyMedia><GraduationCap className="h-12 w-12" /></EmptyMedia>
+                <EmptyTitle>No alumni found</EmptyTitle>
+                <EmptyDescription>Try adjusting your search or filters.</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
         )}
 
         {/* Pagination */}
@@ -578,3 +580,6 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
     </div>
   )
 }
+
+// Import GraduationCap for Empty icon
+import { GraduationCap } from "lucide-react"
