@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Empty } from "@/components/ui/empty"
+import { Empty, EmptyMedia, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -319,11 +319,13 @@ export function EventsSection() {
             })}
           </div>
         ) : (
-          <Empty
-            icon={<Calendar className="h-12 w-12" />}
-            title="Nothing here yet"
-            description={filter === "upcoming" ? "No upcoming events. Create one!" : "No past events."}
-          />
+          <Empty>
+              <EmptyHeader>
+                <EmptyMedia><Calendar className="h-12 w-12" /></EmptyMedia>
+                <EmptyTitle>Nothing here yet</EmptyTitle>
+                <EmptyDescription>{filter === "upcoming" ? "No upcoming events. Create one!" : "No past events."}</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
         )}
       </div>
 

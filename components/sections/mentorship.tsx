@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Empty } from "@/components/ui/empty"
+import { Empty, EmptyMedia, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { toast } from "sonner"
 
 const mentorSchema = z.object({
@@ -244,11 +244,13 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
             })}
           </div>
         ) : (
-          <Empty
-            icon={<Users className="h-12 w-12" />}
-            title="No mentors registered yet"
-            description="Be the first to register as a mentor and help fellow alumni!"
-          />
+          <Empty>
+              <EmptyHeader>
+                <EmptyMedia><Users className="h-12 w-12" /></EmptyMedia>
+                <EmptyTitle>No mentors registered yet</EmptyTitle>
+                <EmptyDescription>Be the first to register as a mentor and help fellow alumni!</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
         )}
       </div>
 

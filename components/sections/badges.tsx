@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Empty } from "@/components/ui/empty"
+import { Empty, EmptyMedia, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { toast } from "sonner"
 
 const badgeSchema = z.object({
@@ -208,11 +208,13 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
               ))}
             </div>
           ) : (
-            <Empty
-              icon={<Trophy className="h-12 w-12" />}
-              title="No badges awarded yet"
-              description="Start recognizing outstanding alumni contributions!"
-            />
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia><Trophy className="h-12 w-12" /></EmptyMedia>
+                <EmptyTitle>No badges awarded yet</EmptyTitle>
+                <EmptyDescription>Start recognizing outstanding alumni contributions!</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           )}
         </div>
       </div>

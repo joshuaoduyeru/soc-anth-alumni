@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Empty } from "@/components/ui/empty"
+import { Empty, EmptyMedia, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { toast } from "sonner"
 
 const newsletterSchema = z.object({
@@ -203,11 +203,13 @@ export function CommunicationsSection() {
                   ))}
                 </div>
               ) : (
-                <Empty
-                  icon={<Inbox className="h-10 w-10" />}
-                  title="No messages sent yet"
-                  description="Compose a newsletter to get started."
-                />
+                <Empty>
+                    <EmptyHeader>
+                      <EmptyMedia><Inbox className="h-10 w-10" /></EmptyMedia>
+                      <EmptyTitle>No messages sent yet</EmptyTitle>
+                      <EmptyDescription>Compose a newsletter to get started.</EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
               )}
             </div>
           </div>

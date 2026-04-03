@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Empty } from "@/components/ui/empty"
+import { Empty, EmptyMedia, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -318,11 +318,13 @@ export function JobsSection() {
             })}
           </div>
         ) : (
-          <Empty
-            icon={<Briefcase className="h-12 w-12" />}
-            title="No jobs posted yet"
-            description="Be the first to post a job opportunity!"
-          />
+          <Empty>
+              <EmptyHeader>
+                <EmptyMedia><Briefcase className="h-12 w-12" /></EmptyMedia>
+                <EmptyTitle>No jobs posted yet</EmptyTitle>
+                <EmptyDescription>Be the first to post a job opportunity!</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
         )}
       </div>
 
