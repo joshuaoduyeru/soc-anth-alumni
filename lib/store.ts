@@ -3,65 +3,85 @@ import { persist } from 'zustand/middleware'
 
 // Types
 export interface Alumni {
-  id: number
+  _id?: string
+  id?: number
   firstName: string
   lastName: string
   email: string
   year: number
-  degree: "Bachelor's" | "Master's" | "PhD"
+  degree: string
   major?: string
   company?: string
+  currentJob?: string
   jobTitle?: string
   phone?: string
   location?: string
   linkedin?: string
   bio?: string
-  role: 'alumni'
+  skills?: string[]
+  isVerified?: boolean
+  isMentor?: boolean
+  role?: 'alumni'
 }
 
 export interface Event {
-  id: number
+  _id?: string
+  id?: number
   title: string
   date: string
   time: string
   location?: string
   description?: string
   maxAttendees?: number
-  type: 'In-Person' | 'Virtual' | 'Hybrid'
+  capacity?: number
+  registeredCount?: number
+  type: string
 }
 
 export interface Job {
-  id: number
+  _id?: string
+  id?: number
   title: string
   company: string
   location?: string
-  type: 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
+  type: string
   salary?: string
   industry?: string
   description?: string
+  requirements?: string[]
   link?: string
+  deadline?: string
+  postedBy?: string
+  isActive?: boolean
 }
 
 export interface Mentor {
-  id: number
-  alumniId: number
+  _id?: string
+  id?: number
+  alumniId: string | number
   expertise: string
   experience?: string
-  availability: 'Weekly' | 'Bi-weekly' | 'Monthly'
+  availability: string
   industry?: string
   bio?: string
 }
 
 export interface Badge {
-  id: number
-  alumniId: number
-  type: string
+  _id?: string
+  id?: number
+  alumniId?: string | number
+  name?: string
+  type?: string
+  icon?: string
+  color?: string
+  description?: string
   reason?: string
-  date: string
+  date?: string
 }
 
 export interface Communication {
-  id: number
+  _id?: string
+  id?: number
   subject: string
   body: string
   recipient: string
@@ -71,26 +91,29 @@ export interface Communication {
 }
 
 export interface EventRegistration {
-  eventId: number
-  userId: number | null
+  eventId: string | number
+  userId: string | null
   ts: string
 }
 
 export interface MentorRequest {
-  mentorId: number
-  userId: number | null
+  mentorId: string | number
+  userId: string | null
   ts: string
 }
 
 export interface User {
+  _id?: string
   email: string
   role: 'admin' | 'alumni'
   name: string
-  id: number | null
+  firstName?: string
+  lastName?: string
+  id?: string | number | null
 }
 
 export const BADGE_DEFINITIONS = [
-  { id: 'pioneer', name: 'Pioneer', icon: 'Rocket', desc: 'First to register' },
+  { id: 'pioneer', name: 'Pioneer Member', icon: 'Rocket', desc: 'First to register' },
   { id: 'mentor', name: 'Super Mentor', icon: 'GraduationCap', desc: 'Active mentorship' },
   { id: 'networker', name: 'Network Champion', icon: 'Users', desc: 'Most connections' },
   { id: 'speaker', name: 'Distinguished Speaker', icon: 'Mic', desc: 'Event presenter' },
@@ -114,37 +137,27 @@ export const JOB_ICONS: Record<string, string> = {
   Media: 'Radio',
 }
 
-// Initial seed data
-const initialAlumni: Alumni[] = [
-  { id: 1, firstName: 'John', lastName: 'Doe', email: 'alumni@example.com', year: 2018, degree: "Bachelor's", major: 'Computer Science', company: 'Google', jobTitle: 'Senior Software Engineer', phone: '+1 415 555 0100', location: 'San Francisco, CA', linkedin: 'https://linkedin.com/in/johndoe', bio: 'Passionate about distributed systems and open-source contributions. Love hiking on weekends.', role: 'alumni' },
-  { id: 2, firstName: 'Sarah', lastName: 'Chen', email: 's.chen@alumni.edu', year: 2019, degree: "Master's", major: 'Data Science', company: 'Meta', jobTitle: 'Data Scientist', phone: '+1 628 555 0200', location: 'Menlo Park, CA', bio: 'Building the future of AI-powered products. ML research enthusiast.', role: 'alumni' },
-  { id: 3, firstName: 'Marcus', lastName: 'Williams', email: 'm.w@alumni.edu', year: 2016, degree: "PhD", major: 'Electrical Engineering', company: 'Tesla', jobTitle: 'Principal Engineer', phone: '+1 310 555 0300', location: 'Austin, TX', linkedin: 'https://linkedin.com/in/mwilliams', bio: 'EV propulsion and power systems expert. Filed 12 patents.', role: 'alumni' },
-  { id: 4, firstName: 'Priya', lastName: 'Sharma', email: 'p.sharma@alumni.edu', year: 2021, degree: "Bachelor's", major: 'Finance', company: 'Goldman Sachs', jobTitle: 'Investment Analyst', phone: '+1 212 555 0400', location: 'New York, NY', bio: 'Early-career finance professional. CFA Level 2 candidate.', role: 'alumni' },
-  { id: 5, firstName: 'Lucas', lastName: 'Müller', email: 'l.muller@alumni.edu', year: 2020, degree: "Master's", major: 'Marketing', company: 'Spotify', jobTitle: 'Growth Marketing Manager', phone: '+49 30 555 0500', location: 'Berlin, Germany', bio: 'Music & growth marketing. Obsessed with data-driven campaigns.', role: 'alumni' },
-  { id: 6, firstName: 'Aisha', lastName: 'Okonkwo', email: 'a.ok@alumni.edu', year: 2017, degree: "PhD", major: 'Biomedical Engineering', company: 'Pfizer', jobTitle: 'Research Scientist', phone: '+1 212 555 0600', location: 'New York, NY', bio: 'Drug delivery and biotech research. Co-authored 8 publications.', role: 'alumni' },
-  { id: 7, firstName: 'Tomás', lastName: 'Rivera', email: 't.r@alumni.edu', year: 2022, degree: "Bachelor's", major: 'Architecture', company: 'Foster + Partners', jobTitle: 'Junior Architect', phone: '+44 20 555 0700', location: 'London, UK', bio: 'Sustainable design and urban planning advocate.', role: 'alumni' },
-  { id: 8, firstName: 'Emily', lastName: 'Park', email: 'e.park@alumni.edu', year: 2015, degree: "Master's", major: 'Psychology', company: 'McKinsey', jobTitle: 'Senior Consultant', phone: '+1 312 555 0800', location: 'Chicago, IL', bio: 'Helping organisations navigate complex change. Executive coach.', role: 'alumni' },
-  { id: 9, firstName: 'Raj', lastName: 'Patel', email: 'r.patel@alumni.edu', year: 2023, degree: "Bachelor's", major: 'Economics', company: 'Stripe', jobTitle: 'Business Analyst', phone: '+1 415 555 0900', location: 'San Francisco, CA', bio: 'Fintech and economic modelling. Recent grad, loving it so far.', role: 'alumni' },
-  { id: 10, firstName: 'Natasha', lastName: 'Ivanova', email: 'n.iv@alumni.edu', year: 2014, degree: "PhD", major: 'Mathematics', company: 'Jane Street', jobTitle: 'Quantitative Researcher', phone: '+1 212 555 1000', location: 'New York, NY', bio: 'Pure math meets financial markets. Former olympiad competitor.', role: 'alumni' },
-  { id: 11, firstName: 'Omar', lastName: 'Hassan', email: 'o.h@alumni.edu', year: 2020, degree: "Bachelor's", major: 'Civil Engineering', company: 'AECOM', jobTitle: 'Infrastructure Engineer', phone: '+971 4 555 1100', location: 'Dubai, UAE', bio: 'Building infrastructure for growing cities across the Middle East.', role: 'alumni' },
-  { id: 12, firstName: 'Yuki', lastName: 'Tanaka', email: 'y.t@alumni.edu', year: 2019, degree: "Master's", major: 'Robotics', company: 'Boston Dynamics', jobTitle: 'Robotics Engineer', phone: '+1 617 555 1200', location: 'Waltham, MA', bio: 'Legged locomotion and motion planning. Robot whisperer.', role: 'alumni' },
-  { id: 13, firstName: 'Grace', lastName: 'Adeyemi', email: 'g.a@alumni.edu', year: 2021, degree: "Bachelor's", major: 'Journalism', company: 'BBC', jobTitle: 'Digital Journalist', phone: '+44 20 555 1300', location: 'London, UK', bio: 'Covering tech and society for the BBC Digital team.', role: 'alumni' },
-  { id: 14, firstName: 'Henrik', lastName: 'Larsson', email: 'h.l@alumni.edu', year: 2016, degree: "PhD", major: 'Climate Science', company: 'NOAA', jobTitle: 'Climate Researcher', phone: '+1 301 555 1400', location: 'Washington, DC', bio: 'Ocean-atmosphere interactions and climate modelling.', role: 'alumni' },
-  { id: 15, firstName: 'Maya', lastName: 'Johnson', email: 'm.j@alumni.edu', year: 2018, degree: "Master's", major: 'Graphic Design', company: 'Apple', jobTitle: 'Product Designer', phone: '+1 408 555 1500', location: 'Cupertino, CA', bio: 'Design systems and human-centred design at Apple. Former freelancer.', role: 'alumni' },
-  { id: 16, firstName: 'Carlos', lastName: 'Mendoza', email: 'c.m@alumni.edu', year: 2017, degree: "Bachelor's", major: 'Business Administration', company: 'Amazon', jobTitle: 'Product Manager', phone: '+1 206 555 1600', location: 'Seattle, WA', bio: 'PM at Amazon Logistics. Passionate about last-mile delivery innovation.', role: 'alumni' },
-  { id: 17, firstName: 'Sophie', lastName: 'Dubois', email: 's.d@alumni.edu', year: 2020, degree: "Master's", major: 'International Relations', company: 'UN', jobTitle: 'Policy Analyst', phone: '+41 22 555 1700', location: 'Geneva, Switzerland', bio: 'Working on global sustainability frameworks at the United Nations.', role: 'alumni' },
-  { id: 18, firstName: 'Kwame', lastName: 'Asante', email: 'k.a@alumni.edu', year: 2019, degree: "PhD", major: 'Computer Vision', company: 'NVIDIA', jobTitle: 'Research Scientist', phone: '+1 408 555 1800', location: 'Santa Clara, CA', bio: 'GPU-accelerated computer vision and autonomous driving perception.', role: 'alumni' },
+// Local fallback data (used when API is unavailable)
+const fallbackAlumni: Alumni[] = [
+  { id: 1, firstName: 'Adebayo', lastName: 'Okonkwo', email: 'alumni@example.com', year: 2018, degree: "BSc", major: 'Sociology', company: 'Nigerian Institute of Social Research', jobTitle: 'Social Research Analyst', phone: '+234 801 234 5678', location: 'Lagos, Nigeria', linkedin: 'https://linkedin.com/in/adebayo', bio: 'Passionate about using sociological research to drive social change in Nigeria.', role: 'alumni' },
+  { id: 2, firstName: 'Chidinma', lastName: 'Eze', email: 'c.eze@oauife.edu.ng', year: 2015, degree: "MSc", major: 'Anthropology', company: 'UNESCO Nigeria', jobTitle: 'Cultural Heritage Consultant', phone: '+234 802 345 6789', location: 'Abuja, Nigeria', bio: 'Dedicated to preserving Nigerian cultural heritage through anthropological research.', role: 'alumni' },
+  { id: 3, firstName: 'Oluwaseun', lastName: 'Adeyemi', email: 'o.adeyemi@oauife.edu.ng', year: 2020, degree: "BSc", major: 'Sociology', company: 'ActionAid Nigeria', jobTitle: 'Community Development Officer', phone: '+234 803 456 7890', location: 'Ile-Ife, Nigeria', bio: 'Working to empower communities through participatory development approaches.', role: 'alumni' },
 ]
 
-const initialBadges: Badge[] = [
-  { id: 101, alumniId: 1, type: 'pioneer', reason: 'First registered alumni.', date: '2024-01-10T10:00:00Z' },
-  { id: 102, alumniId: 1, type: 'mentor', reason: 'Led 6 mentorship sessions in Q1 2024.', date: '2024-03-05T10:00:00Z' },
-  { id: 103, alumniId: 2, type: 'speaker', reason: 'Keynoted AI in Industry webinar.', date: '2024-06-20T10:00:00Z' },
-  { id: 104, alumniId: 3, type: 'career', reason: 'Promoted to Principal Engineer at Tesla.', date: '2024-09-01T10:00:00Z' },
-  { id: 105, alumniId: 10, type: 'alumni_year', reason: 'Outstanding contributions in 2024.', date: '2024-12-31T10:00:00Z' },
-  { id: 106, alumniId: 8, type: 'networker', reason: 'Connected 40+ alumni to new opportunities.', date: '2025-01-15T10:00:00Z' },
-  { id: 107, alumniId: 6, type: 'volunteer', reason: 'Organised 3 campus recruitment events.', date: '2025-02-10T10:00:00Z' },
-  { id: 108, alumniId: 15, type: 'recruiter', reason: 'Posted 5 design roles, 3 filled by alumni.', date: '2025-03-01T10:00:00Z' },
+const fallbackEvents: Event[] = [
+  { id: 1, title: 'OAU-SAN Annual Homecoming 2024', description: 'Join us for the annual homecoming celebration at Obafemi Awolowo University.', date: '2024-11-15', time: '10:00 AM', location: 'OAU Campus, Ile-Ife', type: 'Reunion', capacity: 500, registeredCount: 234 },
+  { id: 2, title: 'Career Development Workshop', description: 'A workshop focused on career advancement strategies for sociology and anthropology graduates.', date: '2024-10-20', time: '2:00 PM', location: 'Virtual (Zoom)', type: 'Workshop', capacity: 100, registeredCount: 67 },
+]
+
+const fallbackJobs: Job[] = [
+  { id: 1, title: 'Senior Research Analyst', company: 'Nigerian Bureau of Statistics', location: 'Abuja, Nigeria', type: 'Full-time', description: 'Lead research projects on demographic and social statistics.', requirements: ['MSc in Sociology or related field', '5+ years experience'], salary: 'N450,000 - N600,000/month', deadline: '2024-11-30', isActive: true },
+  { id: 2, title: 'Community Engagement Coordinator', company: 'World Bank Nigeria', location: 'Lagos, Nigeria', type: 'Full-time', description: 'Coordinate community engagement activities for development projects.', requirements: ['BSc in Sociology/Anthropology', '3+ years in community development'], salary: 'N350,000 - N500,000/month', deadline: '2024-12-15', isActive: true },
+]
+
+const fallbackBadges: Badge[] = [
+  { id: 1, name: 'Pioneer Member', description: 'One of the first 100 members to join OAU-SAN', icon: 'Award', color: 'gold' },
+  { id: 2, name: 'Active Mentor', description: 'Mentored 5+ alumni members', icon: 'Users', color: 'blue' },
+  { id: 3, name: 'Event Champion', description: 'Attended 10+ OAU-SAN events', icon: 'Calendar', color: 'green' },
 ]
 
 interface AlumniStore {
@@ -157,127 +170,392 @@ interface AlumniStore {
   communications: Communication[]
   eventRegistrations: EventRegistration[]
   mentorRequests: MentorRequest[]
-  savedJobs: number[]
+  savedJobs: (string | number)[]
+  
+  // Loading states
+  isLoading: boolean
   
   // Auth
   currentUser: User | null
   
   // Actions
   setCurrentUser: (user: User | null) => void
+  logout: () => void
+  
+  // Data fetching
+  fetchAlumni: () => Promise<void>
+  fetchEvents: () => Promise<void>
+  fetchJobs: () => Promise<void>
+  fetchBadges: () => Promise<void>
+  seedDatabase: () => Promise<{ success: boolean; message: string }>
   
   // Alumni CRUD
-  addAlumni: (alumni: Omit<Alumni, 'id' | 'role'>) => void
-  updateAlumni: (id: number, data: Partial<Alumni>) => void
-  deleteAlumni: (id: number) => void
+  addAlumni: (alumni: Omit<Alumni, '_id' | 'id'>) => Promise<Alumni | null>
+  updateAlumni: (id: string | number, data: Partial<Alumni>) => Promise<boolean>
+  deleteAlumni: (id: string | number) => Promise<boolean>
   
   // Events CRUD
-  addEvent: (event: Omit<Event, 'id'>) => void
-  updateEvent: (id: number, data: Partial<Event>) => void
-  deleteEvent: (id: number) => void
-  registerEvent: (eventId: number, userId: number | null) => void
-  unregisterEvent: (eventId: number, userId: number | null) => void
+  addEvent: (event: Omit<Event, '_id' | 'id'>) => Promise<Event | null>
+  updateEvent: (id: string | number, data: Partial<Event>) => Promise<boolean>
+  deleteEvent: (id: string | number) => Promise<boolean>
+  registerEvent: (eventId: string | number, userId: string | null) => void
+  unregisterEvent: (eventId: string | number, userId: string | null) => void
   
   // Jobs CRUD
-  addJob: (job: Omit<Job, 'id'>) => void
-  updateJob: (id: number, data: Partial<Job>) => void
-  deleteJob: (id: number) => void
-  toggleSaveJob: (jobId: number) => void
+  addJob: (job: Omit<Job, '_id' | 'id'>) => Promise<Job | null>
+  updateJob: (id: string | number, data: Partial<Job>) => Promise<boolean>
+  deleteJob: (id: string | number) => Promise<boolean>
+  toggleSaveJob: (jobId: string | number) => void
   
   // Mentors
-  addMentor: (mentor: Omit<Mentor, 'id'>) => void
-  requestMentorship: (mentorId: number, userId: number | null) => void
+  addMentor: (mentor: Omit<Mentor, '_id' | 'id'>) => void
+  requestMentorship: (mentorId: string | number, userId: string | null) => void
   
   // Badges
-  awardBadge: (badge: Omit<Badge, 'id' | 'date'>) => void
+  awardBadge: (badge: Omit<Badge, '_id' | 'id' | 'date'>) => void
   
   // Communications
-  sendNewsletter: (comm: Omit<Communication, 'id' | 'ts'>) => void
+  sendNewsletter: (comm: Omit<Communication, '_id' | 'id' | 'ts'>) => void
 }
 
 export const useAlumniStore = create<AlumniStore>()(
   persist(
     (set, get) => ({
-      // Initial data
-      alumni: initialAlumni,
-      events: [],
-      jobs: [],
+      // Initial data (fallback)
+      alumni: fallbackAlumni,
+      events: fallbackEvents,
+      jobs: fallbackJobs,
       mentors: [],
-      badges: initialBadges,
+      badges: fallbackBadges,
       communications: [],
       eventRegistrations: [],
       mentorRequests: [],
       savedJobs: [],
       currentUser: null,
+      isLoading: false,
       
       setCurrentUser: (user) => set({ currentUser: user }),
+      
       logout: () => set({ currentUser: null }),
       
-      // Alumni
-      addAlumni: (data) => set((state) => ({
-        alumni: [...state.alumni, { ...data, id: Date.now(), role: 'alumni' as const }]
-      })),
-      updateAlumni: (id, data) => set((state) => ({
-        alumni: state.alumni.map((a) => a.id === id ? { ...a, ...data } : a)
-      })),
-      deleteAlumni: (id) => set((state) => ({
-        alumni: state.alumni.filter((a) => a.id !== id)
-      })),
+      // Fetch from API
+      fetchAlumni: async () => {
+        set({ isLoading: true })
+        try {
+          const res = await fetch('/api/alumni')
+          if (res.ok) {
+            const data = await res.json()
+            if (data.length > 0) {
+              set({ alumni: data })
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch alumni:', error)
+        } finally {
+          set({ isLoading: false })
+        }
+      },
       
-      // Events
-      addEvent: (data) => set((state) => ({
-        events: [...state.events, { ...data, id: Date.now() }]
-      })),
-      updateEvent: (id, data) => set((state) => ({
-        events: state.events.map((e) => e.id === id ? { ...e, ...data } : e)
-      })),
-      deleteEvent: (id) => set((state) => ({
-        events: state.events.filter((e) => e.id !== id),
-        eventRegistrations: state.eventRegistrations.filter((r) => r.eventId !== id)
-      })),
+      fetchEvents: async () => {
+        try {
+          const res = await fetch('/api/events')
+          if (res.ok) {
+            const data = await res.json()
+            if (data.length > 0) {
+              set({ events: data })
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch events:', error)
+        }
+      },
+      
+      fetchJobs: async () => {
+        try {
+          const res = await fetch('/api/jobs')
+          if (res.ok) {
+            const data = await res.json()
+            if (data.length > 0) {
+              set({ jobs: data })
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch jobs:', error)
+        }
+      },
+      
+      fetchBadges: async () => {
+        try {
+          const res = await fetch('/api/badges')
+          if (res.ok) {
+            const data = await res.json()
+            if (data.length > 0) {
+              set({ badges: data })
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch badges:', error)
+        }
+      },
+      
+      seedDatabase: async () => {
+        try {
+          const res = await fetch('/api/seed', { method: 'POST' })
+          if (res.ok) {
+            // Refetch all data after seeding
+            await get().fetchAlumni()
+            await get().fetchEvents()
+            await get().fetchJobs()
+            await get().fetchBadges()
+            return { success: true, message: 'Database seeded successfully' }
+          }
+          return { success: false, message: 'Failed to seed database' }
+        } catch (error) {
+          console.error('Failed to seed database:', error)
+          return { success: false, message: 'Failed to seed database' }
+        }
+      },
+      
+      // Alumni CRUD
+      addAlumni: async (data) => {
+        try {
+          const res = await fetch('/api/alumni', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          if (res.ok) {
+            const newAlumni = await res.json()
+            set((state) => ({ alumni: [...state.alumni, newAlumni] }))
+            return newAlumni
+          }
+        } catch (error) {
+          console.error('Failed to add alumni:', error)
+        }
+        // Fallback to local
+        const localAlumni = { ...data, id: Date.now(), role: 'alumni' as const }
+        set((state) => ({ alumni: [...state.alumni, localAlumni] }))
+        return localAlumni
+      },
+      
+      updateAlumni: async (id, data) => {
+        try {
+          const res = await fetch(`/api/alumni/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          if (res.ok) {
+            const updated = await res.json()
+            set((state) => ({
+              alumni: state.alumni.map((a) => 
+                (a._id === id || a.id === id) ? { ...a, ...updated } : a
+              )
+            }))
+            return true
+          }
+        } catch (error) {
+          console.error('Failed to update alumni:', error)
+        }
+        // Fallback to local
+        set((state) => ({
+          alumni: state.alumni.map((a) => 
+            (a._id === id || a.id === id) ? { ...a, ...data } : a
+          )
+        }))
+        return true
+      },
+      
+      deleteAlumni: async (id) => {
+        try {
+          const res = await fetch(`/api/alumni/${id}`, { method: 'DELETE' })
+          if (res.ok) {
+            set((state) => ({
+              alumni: state.alumni.filter((a) => a._id !== id && a.id !== id)
+            }))
+            return true
+          }
+        } catch (error) {
+          console.error('Failed to delete alumni:', error)
+        }
+        // Fallback to local
+        set((state) => ({
+          alumni: state.alumni.filter((a) => a._id !== id && a.id !== id)
+        }))
+        return true
+      },
+      
+      // Events CRUD
+      addEvent: async (data) => {
+        try {
+          const res = await fetch('/api/events', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          if (res.ok) {
+            const newEvent = await res.json()
+            set((state) => ({ events: [...state.events, newEvent] }))
+            return newEvent
+          }
+        } catch (error) {
+          console.error('Failed to add event:', error)
+        }
+        const localEvent = { ...data, id: Date.now() }
+        set((state) => ({ events: [...state.events, localEvent] }))
+        return localEvent
+      },
+      
+      updateEvent: async (id, data) => {
+        try {
+          const res = await fetch(`/api/events/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          if (res.ok) {
+            const updated = await res.json()
+            set((state) => ({
+              events: state.events.map((e) => 
+                (e._id === id || e.id === id) ? { ...e, ...updated } : e
+              )
+            }))
+            return true
+          }
+        } catch (error) {
+          console.error('Failed to update event:', error)
+        }
+        set((state) => ({
+          events: state.events.map((e) => 
+            (e._id === id || e.id === id) ? { ...e, ...data } : e
+          )
+        }))
+        return true
+      },
+      
+      deleteEvent: async (id) => {
+        try {
+          const res = await fetch(`/api/events/${id}`, { method: 'DELETE' })
+          if (res.ok) {
+            set((state) => ({
+              events: state.events.filter((e) => e._id !== id && e.id !== id),
+              eventRegistrations: state.eventRegistrations.filter((r) => r.eventId !== id)
+            }))
+            return true
+          }
+        } catch (error) {
+          console.error('Failed to delete event:', error)
+        }
+        set((state) => ({
+          events: state.events.filter((e) => e._id !== id && e.id !== id),
+          eventRegistrations: state.eventRegistrations.filter((r) => r.eventId !== id)
+        }))
+        return true
+      },
+      
       registerEvent: (eventId, userId) => set((state) => ({
         eventRegistrations: [...state.eventRegistrations, { eventId, userId, ts: new Date().toISOString() }]
       })),
+      
       unregisterEvent: (eventId, userId) => set((state) => ({
         eventRegistrations: state.eventRegistrations.filter((r) => !(r.eventId === eventId && r.userId === userId))
       })),
       
-      // Jobs
-      addJob: (data) => set((state) => ({
-        jobs: [...state.jobs, { ...data, id: Date.now() }]
-      })),
-      updateJob: (id, data) => set((state) => ({
-        jobs: state.jobs.map((j) => j.id === id ? { ...j, ...data } : j)
-      })),
-      deleteJob: (id) => set((state) => ({
-        jobs: state.jobs.filter((j) => j.id !== id),
-        savedJobs: state.savedJobs.filter((jid) => jid !== id)
-      })),
+      // Jobs CRUD
+      addJob: async (data) => {
+        try {
+          const res = await fetch('/api/jobs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          if (res.ok) {
+            const newJob = await res.json()
+            set((state) => ({ jobs: [...state.jobs, newJob] }))
+            return newJob
+          }
+        } catch (error) {
+          console.error('Failed to add job:', error)
+        }
+        const localJob = { ...data, id: Date.now() }
+        set((state) => ({ jobs: [...state.jobs, localJob] }))
+        return localJob
+      },
+      
+      updateJob: async (id, data) => {
+        try {
+          const res = await fetch(`/api/jobs/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          if (res.ok) {
+            const updated = await res.json()
+            set((state) => ({
+              jobs: state.jobs.map((j) => 
+                (j._id === id || j.id === id) ? { ...j, ...updated } : j
+              )
+            }))
+            return true
+          }
+        } catch (error) {
+          console.error('Failed to update job:', error)
+        }
+        set((state) => ({
+          jobs: state.jobs.map((j) => 
+            (j._id === id || j.id === id) ? { ...j, ...data } : j
+          )
+        }))
+        return true
+      },
+      
+      deleteJob: async (id) => {
+        try {
+          const res = await fetch(`/api/jobs/${id}`, { method: 'DELETE' })
+          if (res.ok) {
+            set((state) => ({
+              jobs: state.jobs.filter((j) => j._id !== id && j.id !== id),
+              savedJobs: state.savedJobs.filter((jid) => jid !== id)
+            }))
+            return true
+          }
+        } catch (error) {
+          console.error('Failed to delete job:', error)
+        }
+        set((state) => ({
+          jobs: state.jobs.filter((j) => j._id !== id && j.id !== id),
+          savedJobs: state.savedJobs.filter((jid) => jid !== id)
+        }))
+        return true
+      },
+      
       toggleSaveJob: (jobId) => set((state) => ({
         savedJobs: state.savedJobs.includes(jobId) 
           ? state.savedJobs.filter((id) => id !== jobId)
           : [...state.savedJobs, jobId]
       })),
       
-      // Mentors
+      // Mentors (local for now)
       addMentor: (data) => set((state) => ({
         mentors: [...state.mentors, { ...data, id: Date.now() }]
       })),
+      
       requestMentorship: (mentorId, userId) => set((state) => ({
         mentorRequests: [...state.mentorRequests, { mentorId, userId, ts: new Date().toISOString() }]
       })),
       
-      // Badges
+      // Badges (local for now)
       awardBadge: (data) => set((state) => ({
         badges: [...state.badges, { ...data, id: Date.now(), date: new Date().toISOString() }]
       })),
       
-      // Communications
+      // Communications (local for now)
       sendNewsletter: (data) => set((state) => ({
         communications: [...state.communications, { ...data, id: Date.now(), ts: new Date().toISOString() }]
       })),
     }),
     {
-      name: 'alumni-store',
+      name: 'oau-san-store',
     }
   )
 )

@@ -84,7 +84,7 @@ export function AppShell({ onLogout }: AppShellProps) {
           className="font-serif text-lg font-black text-white cursor-pointer whitespace-nowrap mr-4"
           onClick={() => setActiveSection("dashboard")}
         >
-          Sociology & Anthropology <span className="text-[var(--secondary)]">Alumni</span>
+          OAU-<span className="text-[var(--secondary)]">SAN</span>
         </div>
 
         {/* Navigation */}

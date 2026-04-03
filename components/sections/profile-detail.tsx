@@ -93,7 +93,7 @@ export function ProfileDetail({ alumniId, onBack, onLogout }: ProfileDetailProps
           className="font-serif text-lg font-black text-white cursor-pointer whitespace-nowrap mr-4"
           onClick={onBack}
         >
-          Sociology & Anthropology <span className="text-[var(--secondary)]">Alumni</span>
+          OAU-<span className="text-[var(--secondary)]">SAN</span>
         </div>
         <div className="flex-1" />
         <div className="flex items-center gap-3">
@@ -390,7 +390,7 @@ export function ProfileDetail({ alumniId, onBack, onLogout }: ProfileDetailProps
                   <div className="pt-0.5">
                     <div className="font-bold text-sm">{alumniRecord.degree} in {alumniRecord.major || "—"}</div>
                     <div className="text-xs text-muted-foreground">
-                      Sociology & Anthropology · Class of {alumniRecord.year}
+                      OAU Sociology & Anthropology · Class of {alumniRecord.year}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
                       Graduated from the University with {alumniRecord.degree} degree.

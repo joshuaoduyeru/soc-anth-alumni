@@ -205,13 +205,11 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center p-12 bg-card border border-dashed rounded-xl text-center">
-              <Trophy className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold">No badges awarded yet</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Start recognizing outstanding alumni contributions!
-              </p>
-            </div>
+            <Empty
+              icon={<Trophy className="h-12 w-12" />}
+              title="No badges awarded yet"
+              description="Start recognizing outstanding alumni contributions!"
+            />
           )}
         </div>
       </div>

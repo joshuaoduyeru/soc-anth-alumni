@@ -402,13 +402,11 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
         )}
 
         {filteredAlumni.length === 0 && (
-          <div className="flex flex-col items-center justify-center p-12 bg-card border border-dashed rounded-xl text-center">
-            <GraduationCap className="h-12 w-12" />
-            <h3 className="text-lg font-semibold">No alumni found</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Try adjusting your search or filters.
-            </p>
-          </div>
+          <Empty
+            icon={<GraduationCap className="h-12 w-12" />}
+            title="No alumni found"
+            description="Try adjusting your search or filters."
+          />
         )}
 
         {/* Pagination */}

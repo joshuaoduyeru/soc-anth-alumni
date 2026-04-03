@@ -10,9 +10,6 @@ export default function Home() {
   const currentUser = useAlumniStore((state) => state.currentUser)
   const [authView, setAuthView] = useState<"signup" | "login">("signup")
 
-  const setCurrentUser = useAlumniStore((state) => state.setCurrentUser)
-  const handleLogout = () => setCurrentUser(null)
-
   if (!currentUser) {
     if (authView === "signup") {
       return <SignupView onSwitchToLogin={() => setAuthView("login")} />
@@ -20,5 +17,5 @@ export default function Home() {
     return <LoginView onSwitchToSignup={() => setAuthView("signup")} />
   }
 
-  return <AppShell onLogout={handleLogout} />
+  return <AppShell />
 }

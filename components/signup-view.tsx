@@ -51,10 +51,7 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true)
     
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 800))
-
-    // Check if email already exists
+    // Check if email already exists locally
     const existingAlumni = alumni.find((a) => a.email.toLowerCase() === data.email.toLowerCase())
     if (existingAlumni) {
       toast.error("An account with this email already exists")
@@ -62,26 +59,32 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
       return
     }
 
-    // Create new alumni record
-    const newAlumniId = Date.now()
-    addAlumni({
+    // Try to create via API first
+    const newAlumniData = {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
+      password: data.password,
       year: data.year,
       degree: data.degree,
       major: data.major,
-    })
+      role: "alumni" as const,
+    }
+
+    const newAlumni = await addAlumni(newAlumniData)
 
     // Auto-login the user
     setCurrentUser({
+      _id: newAlumni?._id,
       email: data.email,
       role: "alumni",
       name: `${data.firstName} ${data.lastName}`,
-      id: newAlumniId,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      id: newAlumni?._id || newAlumni?.id || null,
     })
 
-    toast.success(`Welcome to the Alumni Network, ${data.firstName}!`)
+    toast.success(`Welcome to OAU-SAN, ${data.firstName}!`)
     setIsLoading(false)
   }
 
@@ -98,7 +101,7 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
         
         <div className="relative z-10">
           <h1 className="font-serif text-2xl font-black text-white tracking-tight">
-            Sociology & Anthropology <span className="text-[var(--secondary)]">Alumni</span>
+            OAU-<span className="text-[var(--secondary)]">SAN</span>
           </h1>
         </div>
         
@@ -134,7 +137,7 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
           {/* Mobile Logo */}
           <div className="lg:hidden mb-8">
             <h1 className="font-serif text-xl font-black text-foreground tracking-tight">
-              Sociology & Anthropology <span className="text-[var(--secondary)]">Alumni</span>
+              OAU-<span className="text-[var(--secondary)]">SAN</span>
             </h1>
           </div>
 

@@ -15,8 +15,8 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'Department of Sociology & Anthropology Alumni Tracking System',
-  description: 'Connect, network, and engage with fellow alumni from the Department of Sociology & Anthropology',
+  title: 'OAU-SAN | Obafemi Awolowo University Sociology and Anthropology Alumni Network',
+  description: 'Connect, network, and engage with fellow alumni from the Department of Sociology & Anthropology at Obafemi Awolowo University',
   generator: 'v0.app',
 }
 

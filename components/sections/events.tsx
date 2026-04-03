@@ -319,13 +319,11 @@ export function EventsSection() {
             })}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center p-12 bg-card border border-dashed rounded-xl text-center">
-            <Calendar className="h-12 w-12" />
-            <h3 className="text-lg font-semibold">Nothing here yet</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              {filter === "upcoming" ? "No upcoming events. Create one!" : "No past events."}
-            </p>
-          </div>
+          <Empty
+            icon={<Calendar className="h-12 w-12" />}
+            title="Nothing here yet"
+            description={filter === "upcoming" ? "No upcoming events. Create one!" : "No past events."}
+          />
         )}
       </div>
 

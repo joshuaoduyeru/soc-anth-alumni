@@ -68,7 +68,7 @@ export function DashboardSection({ onViewProfile }: DashboardSectionProps) {
         <div className="absolute -top-48 -right-24 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(253,200,0,0.1)_0%,transparent_70%)]" />
         <h1 className="font-serif text-4xl font-bold text-white mb-1 relative">Dashboard</h1>
         <p className="text-white/45 text-sm relative">
-          Welcome to the Sociology & Anthropology Alumni Network
+          Welcome to OAU-SAN (Obafemi Awolowo University Sociology and Anthropology Alumni Network)
           {currentUser && `, ${currentUser.name}`}.
         </p>
       </div>

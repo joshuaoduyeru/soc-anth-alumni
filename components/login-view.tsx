@@ -37,10 +37,35 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
     
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    try {
+      // Try API login first
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+      
+      if (res.ok) {
+        const user = await res.json()
+        setCurrentUser({
+          _id: user._id,
+          email: user.email,
+          role: user.role,
+          name: user.firstName ? `${user.firstName} ${user.lastName}` : user.name || "User",
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user._id,
+        })
+        toast.success(`Welcome back, ${user.firstName || "User"}!`)
+        setIsLoading(false)
+        return
+      }
+    } catch {
+      // API unavailable, fall back to local auth
+    }
 
-    if (data.email === "admin@university.edu" && data.password === "admin123") {
+    // Fallback local auth for demo
+    if (data.email === "admin@example.com" && data.password === "admin123") {
       setCurrentUser({
         email: data.email,
         role: "admin",
@@ -54,11 +79,11 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
         email: data.email,
         role: "alumni",
         name: alumniRecord ? `${alumniRecord.firstName} ${alumniRecord.lastName}` : "Alumni",
-        id: alumniRecord?.id || null,
+        id: alumniRecord?.id || alumniRecord?._id || null,
       })
       toast.success(`Welcome back, ${alumniRecord?.firstName || "Alumni"}!`)
     } else {
-      toast.error("Invalid credentials. Use a demo account.")
+      toast.error("Invalid credentials. Use a demo account or seed the database.")
     }
     
     setIsLoading(false)
@@ -79,7 +104,7 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
         
         <div className="relative z-10">
           <h1 className="font-serif text-2xl font-black text-white tracking-tight">
-            Sociology & Anthropology <span className="text-[var(--secondary)]">Alumni</span>
+            OAU-<span className="text-[var(--secondary)]">SAN</span>
           </h1>
         </div>
         
@@ -112,7 +137,7 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
           {/* Mobile Logo */}
           <div className="lg:hidden mb-8">
             <h1 className="font-serif text-xl font-black text-foreground tracking-tight">
-              Sociology & Anthropology <span className="text-[var(--secondary)]">Alumni</span>
+              OAU-<span className="text-[var(--secondary)]">SAN</span>
             </h1>
           </div>
 
@@ -175,7 +200,7 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
             <div className="flex gap-2 mb-3">
               <button
                 type="button"
-                onClick={() => fillDemoCredentials("admin@university.edu", "admin123")}
+                onClick={() => fillDemoCredentials("admin@example.com", "admin123")}
                 className="px-3 py-1.5 bg-[var(--primary)] text-white text-xs font-semibold rounded transition-colors hover:bg-[var(--secondary)] hover:text-[var(--primary)]"
               >
                 Admin
@@ -189,7 +214,7 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
               </button>
             </div>
             <div className="text-xs text-muted-foreground leading-relaxed">
-              Admin: admin@university.edu / admin123<br />
+              Admin: admin@example.com / admin123<br />
               Alumni: alumni@example.com / alumni123
             </div>
           </div>
