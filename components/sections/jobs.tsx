@@ -125,7 +125,7 @@ export function JobsSection() {
       title: job.title,
       company: job.company,
       location: job.location || "",
-      type: job.type,
+      type: job.type as JobFormData["type"],
       salary: job.salary || "",
       industry: job.industry || "",
       description: job.description || "",
