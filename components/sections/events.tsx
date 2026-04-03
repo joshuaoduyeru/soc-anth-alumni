@@ -124,7 +124,7 @@ export function EventsSection() {
     }
     
     if (editingEvent) {
-      updateEvent(editingEvent.id, eventData)
+      updateEvent(editingEvent._id || editingEvent.id!, eventData)
       toast.success("Event updated.")
     } else {
       addEvent(eventData as Omit<Event, "id">)
@@ -135,7 +135,7 @@ export function EventsSection() {
 
   const handleDelete = () => {
     if (deleteConfirm) {
-      deleteEvent(deleteConfirm.id)
+      deleteEvent(deleteConfirm._id || deleteConfirm.id!)
       toast.success("Event deleted.")
       setDeleteConfirm(null)
     }
