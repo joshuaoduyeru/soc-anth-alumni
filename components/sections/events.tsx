@@ -210,15 +210,16 @@ export function EventsSection() {
         {filteredEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredEvents.map((event) => {
+              const eventId = event._id || event.id!
               const eventDate = new Date(event.date)
               const isPast = eventDate < new Date()
-              const regs = getRegistrations(event.id)
-              const myReg = isRegistered(event.id)
+              const regs = getRegistrations(eventId)
+              const myReg = isRegistered(eventId)
               const isFull = event.maxAttendees && regs.length >= event.maxAttendees
 
               return (
                 <div
-                  key={event.id}
+                  key={eventId}
                   className={`bg-card border border-border rounded-xl overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg ${isPast ? "opacity-65" : ""}`}
                 >
                   <div className="h-2 bg-gradient-to-r from-[var(--secondary)] to-orange-500" />
@@ -268,19 +269,19 @@ export function EventsSection() {
                               <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg text-xs font-bold text-green-600">
                                 Registered
                               </span>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleUnregister(event.id)}
-                              >
-                                Cancel
-                              </Button>
+<Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleUnregister(eventId)}
+                            >
+                              Cancel
+                            </Button>
                             </>
                           ) : (
                             <Button
                               size="sm"
                               disabled={!!isFull}
-                              onClick={() => handleRegister(event.id)}
+                              onClick={() => handleRegister(eventId)}
                               className="bg-[var(--primary)]"
                             >
                               {isFull ? "Full" : "Register"}
