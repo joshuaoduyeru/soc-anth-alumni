@@ -279,7 +279,7 @@ export function JobsSection() {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => handleToggleSave(job.id)}
+                        onClick={() => job.id !== undefined && handleToggleSave(job.id)}
                       >
                         {isSaved ? (
                           <BookmarkCheck className="h-4 w-4 text-[var(--secondary)]" />
