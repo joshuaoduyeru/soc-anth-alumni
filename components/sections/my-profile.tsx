@@ -64,7 +64,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
   const alumniBadges = alumniRecord ? badges.filter((b) => b.alumniId === alumniIdentifier) : []
   const mentor = alumniRecord ? mentors.find((m) => m.alumniId === alumniIdentifier) : null
   const myEventRegs = eventRegistrations.filter((r) => r.userId === currentUser?.id)
-  const mySavedJobs = jobs.filter((j) => savedJobs.includes(j.id))
+  const mySavedJobs = jobs.filter((j) => j.id !== undefined && savedJobs.includes(j.id))
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
