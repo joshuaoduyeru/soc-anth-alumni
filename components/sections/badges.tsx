@@ -34,7 +34,7 @@ const badgeIcons: Record<string, React.ReactNode> = {
 }
 
 interface BadgesSectionProps {
-  onViewProfile: (id: number) => void
+  onViewProfile: (id: number | string) => void
 }
 
 export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
@@ -60,11 +60,14 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
 
   // Leaderboard: alumni sorted by badge count
   const leaderboard = alumni
-    .map((a) => ({
-      ...a,
-      badgeCount: badges.filter((b) => b.alumniId === a.id).length,
-      userBadges: badges.filter((b) => b.alumniId === a.id),
-    }))
+    .map((a) => {
+      const alumniIdentifier = a._id || a.id
+      return {
+        ...a,
+        badgeCount: badges.filter((b) => b.alumniId === alumniIdentifier || b.alumniId === a.id).length,
+        userBadges: badges.filter((b) => b.alumniId === alumniIdentifier || b.alumniId === a.id),
+      }
+    })
     .filter((a) => a.badgeCount > 0)
     .sort((a, b) => b.badgeCount - a.badgeCount)
 
@@ -155,8 +158,8 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
             <div className="space-y-2">
               {leaderboard.map((alumniRecord, index) => (
                 <div
-                  key={alumniRecord.id}
-                  onClick={() => onViewProfile(alumniRecord.id)}
+                  key={alumniRecord._id || alumniRecord.id}
+                  onClick={() => onViewProfile(alumniRecord._id || alumniRecord.id!)}
                   className="bg-card border border-border rounded-lg p-3.5 flex items-center gap-3.5 cursor-pointer transition-all hover:border-[var(--secondary)] hover:bg-[var(--gold-pale)]"
                 >
                   {/* Rank */}
@@ -233,7 +236,7 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
                   </SelectTrigger>
                   <SelectContent>
                     {alumni.map((a) => (
-                      <SelectItem key={a.id} value={String(a.id)}>
+                      <SelectItem key={a._id || a.id} value={String(a._id || a.id)}>
                         {a.firstName} {a.lastName}
                       </SelectItem>
                     ))}

@@ -5,7 +5,7 @@ import { useAlumniStore } from "@/lib/store"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface DashboardSectionProps {
-  onViewProfile: (id: number) => void
+  onViewProfile: (id: number | string) => void
 }
 
 export function DashboardSection({ onViewProfile }: DashboardSectionProps) {
@@ -40,7 +40,7 @@ export function DashboardSection({ onViewProfile }: DashboardSectionProps) {
   const recentActivity = [
     { text: "Platform launched with seed data", time: "Recently" },
     ...badges.slice(-3).reverse().map((b) => {
-      const al = alumni.find((a) => a.id === b.alumniId)
+      const al = alumni.find((a) => a.id === b.alumniId || a._id === b.alumniId)
       return {
         text: `Badge awarded to ${al?.firstName || "Alumni"} ${al?.lastName || ""}`,
         time: new Date(b.date).toLocaleDateString(),

@@ -25,7 +25,7 @@ const mentorSchema = z.object({
 type MentorFormData = z.infer<typeof mentorSchema>
 
 interface MentorshipSectionProps {
-  onViewProfile: (id: number) => void
+  onViewProfile: (id: number | string) => void
 }
 
 export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
@@ -67,8 +67,8 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
     })
   }, [mentors, searchQuery, availabilityFilter])
 
-  const getAlumniForMentor = (alumniId: number) => {
-    return alumni.find((a) => a.id === alumniId)
+  const getAlumniForMentor = (alumniId: number | string | undefined) => {
+    return alumni.find((a) => a.id === alumniId || a._id === alumniId)
   }
 
   const hasRequestedMentorship = (mentorId: number) => {
@@ -179,7 +179,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
                     <div className="min-w-0">
                       <div 
                         className="font-bold text-base cursor-pointer hover:text-[var(--secondary)] truncate"
-                        onClick={() => alumniRecord && onViewProfile(alumniRecord.id)}
+                        onClick={() => alumniRecord && onViewProfile(alumniRecord._id || alumniRecord.id!)}
                       >
                         {name}
                       </div>

@@ -4,7 +4,7 @@ import { useState, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Search, Grid3X3, List, Plus, X, Award } from "lucide-react"
+import { GraduationCap, Search, Grid3X3, List, Plus, X, Award } from "lucide-react"
 import { useAlumniStore, type Alumni, BADGE_DEFINITIONS } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -42,7 +42,7 @@ const alumniSchema = z.object({
 type AlumniFormData = z.infer<typeof alumniSchema>
 
 interface DirectorySectionProps {
-  onViewProfile: (id: number) => void
+  onViewProfile: (id: number | string) => void
 }
 
 const PER_PAGE = 12
@@ -150,10 +150,10 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
 
   const onSubmit = (data: AlumniFormData) => {
     if (editingAlumni) {
-      updateAlumni(editingAlumni.id, data)
+      updateAlumni(editingAlumni._id || editingAlumni.id!, data)
       toast.success(`${data.firstName} ${data.lastName} updated.`)
     } else {
-      addAlumni(data as Omit<Alumni, "id" | "role">)
+      addAlumni(data as Omit<Alumni, "id">)
       toast.success(`${data.firstName} ${data.lastName} added to the network.`)
     }
     setIsModalOpen(false)
@@ -161,13 +161,13 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
 
   const handleDelete = () => {
     if (deleteConfirm) {
-      deleteAlumni(deleteConfirm.id)
+      deleteAlumni(deleteConfirm._id || deleteConfirm.id!)
       toast.success("Alumni deleted.")
       setDeleteConfirm(null)
     }
   }
 
-  const getAlumniBadges = (alumniId: number) => {
+  const getAlumniBadges = (alumniId: number | string | undefined) => {
     return badges.filter((b) => b.alumniId === alumniId)
   }
 
@@ -276,11 +276,11 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
         {viewMode === "grid" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {paginatedAlumni.map((a) => {
-              const alBadges = getAlumniBadges(a.id)
+              const alBadges = getAlumniBadges(a._id || a.id)
               return (
                 <div
-                  key={a.id}
-                  onClick={() => onViewProfile(a.id)}
+                  key={a._id || a.id}
+                  onClick={() => onViewProfile(a._id || a.id!)}
                   className="bg-card border border-border rounded-xl p-5 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg hover:border-[var(--secondary)]"
                 >
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--secondary)] to-orange-500 flex items-center justify-center text-xl font-bold text-white font-serif mb-3">
@@ -357,8 +357,8 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
               <tbody>
                 {paginatedAlumni.map((a) => (
                   <tr 
-                    key={a.id} 
-                    onClick={() => onViewProfile(a.id)}
+                    key={a._id || a.id} 
+                    onClick={() => onViewProfile(a._id || a.id!)}
                     className="hover:bg-[var(--gold-pale)] cursor-pointer"
                   >
                     <td className="p-3 border-b border-border">
@@ -578,6 +578,3 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
     </div>
   )
 }
-
-// Import GraduationCap for Empty icon
-import { GraduationCap } from "lucide-react"

@@ -38,7 +38,7 @@ const badgeIcons: Record<string, React.ReactNode> = {
 }
 
 interface MyProfileSectionProps {
-  onViewProfile: (id: number) => void
+  onViewProfile: (id: number | string) => void
 }
 
 export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
@@ -59,9 +59,10 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
   
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const alumniRecord = alumni.find((a) => a.id === currentUser?.id)
-  const alumniBadges = alumniRecord ? badges.filter((b) => b.alumniId === alumniRecord.id) : []
-  const mentor = alumniRecord ? mentors.find((m) => m.alumniId === alumniRecord.id) : null
+  const alumniRecord = alumni.find((a) => a.id === currentUser?.id || a._id === currentUser?.id || a._id === currentUser?._id)
+  const alumniIdentifier = alumniRecord?._id || alumniRecord?.id
+  const alumniBadges = alumniRecord ? badges.filter((b) => b.alumniId === alumniIdentifier) : []
+  const mentor = alumniRecord ? mentors.find((m) => m.alumniId === alumniIdentifier) : null
   const myEventRegs = eventRegistrations.filter((r) => r.userId === currentUser?.id)
   const mySavedJobs = jobs.filter((j) => savedJobs.includes(j.id))
 
@@ -97,7 +98,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
 
   const onSubmit = (data: ProfileFormData) => {
     if (alumniRecord && currentUser) {
-      updateAlumni(alumniRecord.id, data)
+      updateAlumni(alumniRecord._id || alumniRecord.id!, data)
       setCurrentUser({
         ...currentUser,
         name: `${data.firstName} ${data.lastName}`,
