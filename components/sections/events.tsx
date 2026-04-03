@@ -141,7 +141,7 @@ export function EventsSection() {
     }
   }
 
-  const getRegistrations = (eventId: number) => {
+  const getRegistrations = (eventId: string | number) => {
     return eventRegistrations.filter((r) => r.eventId === eventId)
   }
 
