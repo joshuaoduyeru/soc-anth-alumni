@@ -365,8 +365,10 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                             variant="outline" 
                             size="sm"
                             onClick={() => {
-                              toggleSaveJob(job.id)
-                              toast.success("Job removed from saved.")
+                              if (job.id !== undefined) {
+                                toggleSaveJob(job.id)
+                                toast.success("Job removed from saved.")
+                              }
                             }}
                           >
                             Remove
