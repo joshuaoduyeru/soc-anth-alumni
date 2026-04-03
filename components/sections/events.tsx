@@ -112,7 +112,7 @@ export function EventsSection() {
       location: event.location || "",
       description: event.description || "",
       maxAttendees: event.maxAttendees || "",
-      type: event.type,
+      type: event.type as "In-Person" | "Virtual" | "Hybrid",
     })
     setIsModalOpen(true)
   }
