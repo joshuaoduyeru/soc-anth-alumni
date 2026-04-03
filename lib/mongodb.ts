@@ -15,18 +15,21 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined
 }
 
+function createClientPromise(): Promise<MongoClient> {
+  const mongoClient = new MongoClient(uri, options)
+  return mongoClient.connect()
+}
+
 if (process.env.NODE_ENV === 'development') {
   // In development, use a global variable so that the value
   // is preserved across module reloads caused by HMR
   if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options)
-    global._mongoClientPromise = client.connect()
+    global._mongoClientPromise = createClientPromise()
   }
   clientPromise = global._mongoClientPromise
 } else {
-  // In production, don't use a global variable
-  client = new MongoClient(uri, options)
-  clientPromise = client.connect()
+  // In production, create the promise lazily
+  clientPromise = createClientPromise()
 }
 
 export default clientPromise
