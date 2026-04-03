@@ -68,6 +68,7 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
   }
 
   const handleDelete = () => {
+    if (alumniRecord.id === undefined) return
     deleteAlumni(alumniRecord.id)
     toast.success("Alumni deleted.")
     onBack()
