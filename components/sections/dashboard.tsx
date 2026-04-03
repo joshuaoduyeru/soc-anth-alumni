@@ -43,7 +43,7 @@ export function DashboardSection({ onViewProfile }: DashboardSectionProps) {
       const al = alumni.find((a) => a.id === b.alumniId || a._id === b.alumniId)
       return {
         text: `Badge awarded to ${al?.firstName || "Alumni"} ${al?.lastName || ""}`,
-        time: new Date(b.date).toLocaleDateString(),
+        time: b.date ? new Date(b.date).toLocaleDateString() : "Recently",
       }
     }),
   ]
