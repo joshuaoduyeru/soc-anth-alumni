@@ -1,10 +1,10 @@
 import { MongoClient, Db } from 'mongodb'
 
-if (!process.env.MONGODB_URI) {
+const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/soc-anth-alumni'
+
+if (!process.env.MONGODB_URI && process.env.NODE_ENV === 'production') {
   throw new Error('Please add MONGODB_URI to your environment variables')
 }
-
-const uri = process.env.MONGODB_URI
 const options = {}
 
 let client: MongoClient
