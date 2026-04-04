@@ -141,17 +141,17 @@ export function EventsSection() {
     }
   }
 
-  const getRegistrations = (eventId: string | number) => {
+  const getRegistrations = (eventId: string) => {
     return eventRegistrations.filter((r) => r.eventId === eventId)
   }
 
-  const isRegistered = (eventId: number | string) => {
+  const isRegistered = (eventId: string) => {
     return eventRegistrations.some(
       (r) => r.eventId === eventId && r.userId === currentUser?._id
     )
   }
 
-  const handleRegister = (eventId: number | string) => {
+  const handleRegister = (eventId: string) => {
     if (isRegistered(eventId)) {
       toast.info("Already registered.")
       return
@@ -160,7 +160,7 @@ export function EventsSection() {
     toast.success("Registered! Confirmation sent.")
   }
 
-  const handleUnregister = (eventId: number | string) => {
+  const handleUnregister = (eventId: string) => {
     unregisterEvent(eventId, currentUser?._id || null)
     toast.info("Registration cancelled.")
   }
