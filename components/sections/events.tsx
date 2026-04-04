@@ -111,7 +111,7 @@ export function EventsSection() {
       time: event.time,
       location: event.location || "",
       description: event.description || "",
-      maxAttendees: event.maxAttendees || "",
+      maxAttendees: (event.maxAttendees !== undefined ? Number(event.maxAttendees) || "" : "") as number | "",
       type: event.type as "In-Person" | "Virtual" | "Hybrid",
     })
     setIsModalOpen(true)
