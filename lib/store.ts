@@ -538,10 +538,10 @@ export const useAlumniStore = create<AlumniStore>()(
       // ── Mentors ──────────────────────────────────────────────────────────────
       addMentor: (data) => {
         // Optimistic local add (API integration can be wired later)
-        const newMentor = {
+        const newMentor: Mentor = {
           ...data,
           id: Date.now(),
-        } satisfies Mentor
+        }
         set((state) => ({ mentors: [...state.mentors, newMentor] }))
       },
 
