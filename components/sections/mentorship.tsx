@@ -25,7 +25,7 @@ const mentorSchema = z.object({
 type MentorFormData = z.infer<typeof mentorSchema>
 
 interface MentorshipSectionProps {
-  onViewProfile: (id: number | string) => void
+  onViewProfile: (id: string) => void
 }
 
 export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
@@ -67,17 +67,17 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
     })
   }, [mentors, searchQuery, availabilityFilter])
 
-  const getAlumniForMentor = (alumniId: number | string | undefined) => {
+  const getAlumniForMentor = (alumniId: string | undefined) => {
     return alumni.find((a) => a._id === alumniId)
   }
 
-  const hasRequestedMentorship = (mentorId: number | string) => {
+  const hasRequestedMentorship = (mentorId: string) => {
     return mentorRequests.some(
       (r) => r.mentorId === mentorId && r.userId === currentUser?._id
     )
   }
 
-  const handleRequestMentorship = (mentorId: number | string, mentorName: string) => {
+  const handleRequestMentorship = (mentorId: string, mentorName: string) => {
     if (hasRequestedMentorship(mentorId)) {
       toast.info("Request already sent.")
       return

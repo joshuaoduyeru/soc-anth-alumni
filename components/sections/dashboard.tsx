@@ -5,7 +5,7 @@ import { useAlumniStore } from "@/lib/store"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface DashboardSectionProps {
-  onViewProfile: (id: number | string) => void
+  onViewProfile: (id: string) => void
 }
 
 export function DashboardSection({ onViewProfile }: DashboardSectionProps) {

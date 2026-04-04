@@ -42,7 +42,7 @@ const alumniSchema = z.object({
 type AlumniFormData = z.infer<typeof alumniSchema>
 
 interface DirectorySectionProps {
-  onViewProfile: (id: number | string) => void
+  onViewProfile: (id: string) => void
 }
 
 const PER_PAGE = 12
@@ -167,7 +167,7 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
     }
   }
 
-  const getAlumniBadges = (alumniId: number | string | undefined) => {
+  const getAlumniBadges = (alumniId: string | undefined) => {
     return badges.filter((b) => b.alumniId === alumniId)
   }
 

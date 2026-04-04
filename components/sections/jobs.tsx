@@ -153,7 +153,7 @@ export function JobsSection() {
     }
   }
 
-  const handleToggleSave = (jobId: string | number) => {
+  const handleToggleSave = (jobId: string) => {
     const isSaved = savedJobs.includes(jobId)
     toggleSaveJob(jobId)
     toast.success(isSaved ? "Job removed from saved." : "Job saved!")

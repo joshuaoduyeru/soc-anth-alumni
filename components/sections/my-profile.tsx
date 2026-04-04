@@ -41,7 +41,7 @@ const badgeIcons: Record<string, React.ReactNode> = {
 }
 
 interface MyProfileSectionProps {
-  onViewProfile: (id: number | string) => void
+  onViewProfile: (id: string) => void
 }
 
 export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {

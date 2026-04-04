@@ -28,7 +28,7 @@ const badgeIcons: Record<string, React.ReactNode> = {
 }
 
 interface ProfileDetailProps {
-  alumniId: number | string
+  alumniId: string
   onBack: () => void
 }
 
