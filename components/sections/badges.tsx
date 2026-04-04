@@ -76,7 +76,7 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
 
   const onSubmit = async (data: BadgeFormData) => {
     const alumniRecord = alumni.find(
-      (a) => String(a._id!)))) === data.alumniId
+      (a) => String(a._id!) === data.alumniId
     )
     const badgeDef = BADGE_DEFINITIONS.find((d) => d._id === data.type)
 
