@@ -158,8 +158,8 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
             <div className="space-y-2">
               {leaderboard.map((alumniRecord, index) => (
                 <div
-                  key={alumniRecord._id ?? alumniRecord.id}
-                  onClick={() => onViewProfile(alumniRecord._id ?? alumniRecord.id!)}
+                  key={alumniRecord._id}
+                  onClick={() => onViewProfile(alumniRecord._id!)}
                   className="bg-card border border-border rounded-lg p-3.5 flex items-center gap-3.5 cursor-pointer transition-all hover:border-[var(--secondary)] hover:bg-[var(--gold-pale)]"
                 >
                   <div className="font-serif text-xl font-bold w-8 text-center shrink-0" style={{ color: getRankColor(index) }}>
