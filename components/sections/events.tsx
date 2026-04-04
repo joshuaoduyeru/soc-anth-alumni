@@ -215,7 +215,7 @@ export function EventsSection() {
               const isPast = eventDate < new Date()
               const regs = getRegistrations(eventId)
               const myReg = isRegistered(eventId)
-              const isFull = event.maxAttendees && regs.length >= event.maxAttendees
+              const isFull = event.maxAttendees && regs.length >= Number(event.maxAttendees)
 
               return (
                 <div
