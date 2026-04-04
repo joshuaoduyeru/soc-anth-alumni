@@ -96,14 +96,14 @@ export async function PUT(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ _id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB()
 
-    const { _id } = await params
+    const { id } = await params
 
-    const user = await User.findByIdAndDelete(_id)
+    const user = await User.findByIdAndDelete(id)
 
     if (!user) {
       return NextResponse.json(
@@ -114,8 +114,8 @@ export async function DELETE(
 
     // Clean up related records
     await Promise.all([
-      Badge.deleteMany({ recipient: _id }),
-      MentorProfile.deleteOne({ user: _id }),
+      Badge.deleteMany({ recipient: id }),
+      MentorProfile.deleteOne({ user: id }),
     ])
 
     return NextResponse.json({ success: true })
