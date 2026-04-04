@@ -22,7 +22,7 @@ export async function connectDB(): Promise<Connection> {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
+    cached.promise = mongoose.connect(MONGODB_URI!, {
       bufferCommands: false,
       maxPoolSize: 10,
       minPoolSize: 1,
