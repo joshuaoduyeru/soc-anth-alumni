@@ -30,7 +30,7 @@ type Section =
 
 export function AppShell() {
   const [activeSection, setActiveSection] = useState<Section>("dashboard")
-  const [viewingProfileId, setViewingProfileId] = useState<number | string | null>(null)
+  const [viewingProfileId, setViewingProfileId] = useState<string | null>(null)
   const { currentUser } = useAlumniStore()
 
   const navItems: { id: Section; label: string }[] = [
@@ -45,7 +45,7 @@ export function AppShell() {
     { id: "my-profile", label: "My Profile" },
   ]
 
-  const handleViewProfile = (id: number | string) => {
+  const handleViewProfile = (id: string) => {
     setViewingProfileId(id)
   }
 
