@@ -162,29 +162,29 @@ interface AlumniStore {
 
   // ── Alumni CRUD ────────────────────────────────────────────────────────────
   addAlumni: (data: any) => Promise<Alumni | null>
-  updateAlumni: (id: string | number, data: any) => Promise<void>
-  deleteAlumni: (id: string | number) => Promise<void>
+  updateAlumni: (id: string, data: any) => Promise<void>
+  deleteAlumni: (id: string) => Promise<void>
 
   // ── Events CRUD ────────────────────────────────────────────────────────────
   addEvent: (data: any) => Promise<void>
-  updateEvent: (id: string | number, data: any) => Promise<void>
-  deleteEvent: (id: string | number) => Promise<void>
+  updateEvent: (id: string, data: any) => Promise<void>
+  deleteEvent: (id: string) => Promise<void>
 
   // ── Jobs CRUD ──────────────────────────────────────────────────────────────
   addJob: (data: any) => Promise<void>
-  updateJob: (id: string | number, data: any) => Promise<void>
-  deleteJob: (id: string | number) => Promise<void>
+  updateJob: (id: string, data: any) => Promise<void>
+  deleteJob: (id: string) => Promise<void>
 
   // ── Badges ─────────────────────────────────────────────────────────────────
-  awardBadge: (data: { alumniId: string | number; type: string; reason?: string }) => Promise<boolean>
+  awardBadge: (data: { alumniId: string; type: string; reason?: string }) => Promise<boolean>
 
   // ── Mentors ────────────────────────────────────────────────────────────────
   addMentor: (data: Omit<Mentor, '_id'>) => void
-  requestMentorship: (mentorId: string | number, userId: string | number | null) => void
+  requestMentorship: (mentorId: string, userId: string | null) => void
 
   // ── Event registration ─────────────────────────────────────────────────────
-  registerEvent: (eventId: string | number, userId: string | null) => void
-  unregisterEvent: (eventId: string | number, userId: string | null) => void
+  registerEvent: (eventId: string, userId: string | null) => void
+  unregisterEvent: (eventId: string, userId: string | null) => void
 
   // ── Communications ─────────────────────────────────────────────────────────
   sendNewsletter: (data: {
