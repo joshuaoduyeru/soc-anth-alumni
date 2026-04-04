@@ -38,6 +38,7 @@ interface AlumniStore {
   badges: any[]
   mentors: any[]
   eventRegistrations: any[]
+  communications: any[]
 
   // Loading states
   isLoading: boolean
@@ -73,6 +74,12 @@ interface AlumniStore {
   updateJob: (id: string, data: any) => void
   deleteJob: (id: string) => void
 
+  // Badge operations
+  awardBadge: (data: { alumniId: string | number; type: string; reason?: string }) => Promise<boolean>
+
+  // Communications
+  sendNewsletter: (data: { subject: string; body: string; recipient: string; recipientLabel: string; count: number }) => Promise<boolean>
+
   // Admin actions
   promoteToAdmin: (userId: string) => Promise<boolean>
   removeAdminPrivileges: (userId: string) => Promise<boolean>
@@ -96,6 +103,7 @@ export const useAlumniStore = create<AlumniStore>()(
       badges: [],
       mentors: [],
       eventRegistrations: [],
+      communications: [],
       currentUser: null,
       isLoading: false,
       error: null,
@@ -381,6 +389,51 @@ export const useAlumniStore = create<AlumniStore>()(
           return res.ok
         } catch (error) {
           console.error('Failed to unregister from event:', error)
+          return false
+        }
+      },
+
+      // Award badge to user
+      awardBadge: async (data) => {
+        try {
+          const res = await fetch('/api/badges', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              recipientId: data.alumniId,
+              badgeType: data.type,
+              reason: data.reason || null,
+              awardedBy: get().currentUser?.id,
+            }),
+          })
+          if (res.ok) {
+            // Refresh badges
+            await get().fetchBadges()
+            return true
+          }
+          return false
+        } catch (error) {
+          console.error('Failed to award badge:', error)
+          return false
+        }
+      },
+
+      // Send newsletter
+      sendNewsletter: async (data) => {
+        try {
+          const res = await fetch('/api/communications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              subject: data.subject,
+              body: data.body,
+              recipientType: data.recipient,
+              sentBy: get().currentUser?.id,
+            }),
+          })
+          return res.ok
+        } catch (error) {
+          console.error('Failed to send newsletter:', error)
           return false
         }
       },
