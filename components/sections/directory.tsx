@@ -306,7 +306,7 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
                   {alBadges.length > 0 && (
                     <div className="flex gap-1 mt-2">
                       {alBadges.slice(0, 3).map((b) => {
-                        const def = BADGE_DEFINITIONS.find((d) => d._id === b.type)
+                        const def = BADGE_DEFINITIONS.find((d) => d.id === b.type)
                         return def ? (
                           <span key={b.id} title={def.name} className="text-base">
                             <Award className="h-4 w-4 text-[var(--secondary)]" />
