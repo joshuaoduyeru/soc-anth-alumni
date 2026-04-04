@@ -54,7 +54,7 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
   // Badge catalogue with awarded counts
   const badgeCatalog = BADGE_DEFINITIONS.map((def) => ({
     ...def,
-    count: badges.filter((b) => (b.type ?? b.badgeType) === def._id).length,
+    count: badges.filter((b) => (b.type ?? b.badgeType) === def._id!).length,
   }))
 
   // Leaderboard
@@ -76,7 +76,7 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
 
   const onSubmit = async (data: BadgeFormData) => {
     const alumniRecord = alumni.find(
-      (a) => String(a._id) === data.alumniId
+      (a) => String(a._id!)))) === data.alumniId
     )
     const badgeDef = BADGE_DEFINITIONS.find((d) => d._id === data.type)
 
@@ -218,7 +218,7 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
                   </SelectTrigger>
                   <SelectContent>
                     {alumni.map((a) => (
-                      <SelectItem key={a._id} value={String(a._id)}>
+                      <SelectItem key={a._id} value={String(a._id!)}>
                         {a.firstName} {a.lastName}
                       </SelectItem>
                     ))}

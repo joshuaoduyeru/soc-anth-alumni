@@ -80,7 +80,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
   )
 
   const mySavedJobs = jobs.filter(
-    (j) => j._id !== undefined && savedJobs.includes(j._id)
+    (j) => j._id !== undefined && savedJobs.includes(j._id!)
   )
 
   const form = useForm<ProfileFormData>({
@@ -115,7 +115,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
 
   const onSubmit = (data: ProfileFormData) => {
     if (alumniRecord && currentUser) {
-      updateAlumni(alumniRecord._id, data)
+      updateAlumni(alumniRecord._id!, data)
       const fullName = `${data.firstName} ${data.lastName}`
       setCurrentUser({
         ...currentUser,
@@ -328,7 +328,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                 {myEventRegs.length > 0 ? (
                   <div className="space-y-3">
                     {events
-                      .filter((e) => myEventRegs.some((r) => r.eventId === (e._id)))
+                      .filter((e) => myEventRegs.some((r) => r.eventId === (e._id!)))
                       .map((event) => (
                         <div key={event._id} className="flex justify-between items-center py-2.5 border-b border-border last:border-0">
                           <div>
@@ -382,7 +382,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                             size="sm"
                             onClick={() => {
                               if (job._id !== undefined) {
-                                toggleSaveJob(job._id)
+                                toggleSaveJob(job._id!)
                                 toast.success("Job removed from saved.")
                               }
                             }}
@@ -420,7 +420,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                   <div>
                     <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Requests received</div>
                     <div className="text-sm">
-                      {mentorRequests.filter((r) => r.mentorId === (mentor._id)).length}
+                      {mentorRequests.filter((r) => r.mentorId === (mentor._id!)).length}
                     </div>
                   </div>
                 </div>

@@ -135,7 +135,7 @@ export function EventsSection() {
 
   const handleDelete = () => {
     if (deleteConfirm) {
-      deleteEvent(deleteConfirm._id)
+      deleteEvent(deleteConfirm._id!)
       toast.success("Event deleted.")
       setDeleteConfirm(null)
     }

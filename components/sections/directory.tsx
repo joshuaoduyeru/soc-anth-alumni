@@ -276,7 +276,7 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
         {viewMode === "grid" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {paginatedAlumni.map((a) => {
-              const alBadges = getAlumniBadges(a._id)
+              const alBadges = getAlumniBadges(a._id!)
               return (
                 <div
                   key={a._id}

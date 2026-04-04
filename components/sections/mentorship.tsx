@@ -165,7 +165,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
               const title = alumniRecord 
                 ? `${alumniRecord.jobTitle || ""} · ${alumniRecord.company || ""}`.trim().replace(/^·\s*|·\s*$/g, "")
                 : ""
-              const hasRequested = hasRequestedMentorship(mentor._id)
+              const hasRequested = hasRequestedMentorship(mentor._id!)
 
               return (
                 <div
@@ -180,7 +180,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
                     <div className="min-w-0">
                       <div 
                         className="font-bold text-base cursor-pointer hover:text-[var(--secondary)] truncate"
-                        onClick={() => alumniRecord && onViewProfile(alumniRecord._id)}
+                        onClick={() => alumniRecord && onViewProfile(alumniRecord._id!)}
                       >
                         {name}
                       </div>
@@ -223,7 +223,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
 
                   {/* Action Button */}
                   <button
-                    onClick={() => mentor._id !== undefined && handleRequestMentorship(mentor._id, name)}
+                    onClick={() => mentor._id !== undefined && handleRequestMentorship(mentor._id!, name)}
                     disabled={hasRequested}
                     className={`w-full py-2 px-4 rounded-lg font-bold text-sm transition-all ${
                       hasRequested

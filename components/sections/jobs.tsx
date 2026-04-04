@@ -147,7 +147,7 @@ export function JobsSection() {
 
   const handleDelete = () => {
     if (deleteConfirm && deleteConfirm._id != null) {
-      deleteJob(deleteConfirm._id)
+      deleteJob(deleteConfirm._id!)
       toast.success("Job deleted.")
       setDeleteConfirm(null)
     }
