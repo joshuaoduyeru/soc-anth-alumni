@@ -426,7 +426,7 @@ export const useAlumniStore = create<AlumniStore>()(
               ...data,
               startDate: data.date,
               endDate: data.date,
-              createdBy: get().currentUser?.id,
+              createdBy: get().currentUser?._id,
             }),
           })
           if (res.ok) await get().fetchEvents()
@@ -469,7 +469,7 @@ export const useAlumniStore = create<AlumniStore>()(
               ...data,
               salaryRange: data.salary,
               applicationUrl: data.link,
-              postedBy: get().currentUser?.id,
+              postedBy: get().currentUser?._id,
             }),
           })
           if (res.ok) await get().fetchJobs()
@@ -512,7 +512,7 @@ export const useAlumniStore = create<AlumniStore>()(
               recipientId: data.alumniId,
               badgeType: data.type,
               reason: data.reason ?? null,
-              awardedBy: get().currentUser?.id,
+              awardedBy: get().currentUser?._id,
             }),
           })
           if (res.ok) {
@@ -569,7 +569,7 @@ export const useAlumniStore = create<AlumniStore>()(
               subject: data.subject,
               body: data.body,
               recipientType: data.recipient,
-              sentBy: get().currentUser?.id,
+              sentBy: get().currentUser?._id,
             }),
           })
           // Optimistic update so history shows immediately
@@ -598,7 +598,7 @@ export const useAlumniStore = create<AlumniStore>()(
           await fetch('/api/jobs/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jobId, userId: get().currentUser?.id }),
+            body: JSON.stringify({ jobId, userId: get().currentUser?._id }),
           })
           return true
         } catch (error) {
@@ -618,7 +618,7 @@ export const useAlumniStore = create<AlumniStore>()(
           const res = await fetch('/api/admin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, adminId: get().currentUser?.id }),
+            body: JSON.stringify({ userId, adminId: get().currentUser?._id }),
           })
           return res.ok
         } catch (error) {
@@ -631,7 +631,7 @@ export const useAlumniStore = create<AlumniStore>()(
         try {
           const url = new URL('/api/admin', window.location.origin)
           url.searchParams.set('userId', userId)
-          url.searchParams.set('adminId', get().currentUser?.id ?? '')
+          url.searchParams.set('adminId', get().currentUser?._id ?? '')
           const res = await fetch(url.toString(), { method: 'DELETE' })
           return res.ok
         } catch (error) {

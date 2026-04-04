@@ -63,7 +63,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const alumniRecord = alumni.find(
-    (a) => a._id === currentUser?.id || a.id === currentUser?.id
+    (a) => a._id === currentUser?._id
   )
   const alumniIdentifier = alumniRecord?._id ?? alumniRecord?.id
 
@@ -76,7 +76,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
     : null
 
   const myEventRegs = eventRegistrations.filter(
-    (r) => r.userId === currentUser?.id
+    (r) => r.userId === currentUser?._id
   )
 
   const mySavedJobs = jobs.filter(

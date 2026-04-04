@@ -68,12 +68,12 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
   }, [mentors, searchQuery, availabilityFilter])
 
   const getAlumniForMentor = (alumniId: number | string | undefined) => {
-    return alumni.find((a) => a.id === alumniId || a._id === alumniId)
+    return alumni.find((a) => a._id === alumniId)
   }
 
   const hasRequestedMentorship = (mentorId: number | string) => {
     return mentorRequests.some(
-      (r) => r.mentorId === mentorId && r.userId === currentUser?.id
+      (r) => r.mentorId === mentorId && r.userId === currentUser?._id
     )
   }
 
@@ -82,7 +82,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
       toast.info("Request already sent.")
       return
     }
-    requestMentorship(mentorId, currentUser?.id || null)
+    requestMentorship(mentorId, currentUser?._id || null)
     toast.success(`Mentorship request sent to ${mentorName}!`)
   }
 
@@ -99,7 +99,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
 
   const onSubmit = (data: MentorFormData) => {
     addMentor({
-      alumniId: currentUser?._id || currentUser?.id || alumni[0]?._id || alumni[0]?.id || "1",
+      alumniId: currentUser?._id || alumni[0]?._id || alumni[0]?.id || "1",
       expertise: data.expertise,
       experience: data.experience ? String(data.experience) : undefined,
       availability: data.availability,

@@ -45,7 +45,7 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
       if (res.ok) {
         const user = await res.json()
         setCurrentUser({
-          id: user.id,
+          _id: user._id,
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
