@@ -34,12 +34,11 @@ interface ProfileDetailProps {
 }
 
 export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
-  const { currentUser, alumni, badges, mentors, mentorRequests, deleteAlumni, requestMentorship, logout } = useAlumniStore()
+  const { currentUser, alumni, badges, logout } = useAlumniStore()
   const [deleteConfirm, setDeleteConfirm] = useState(false)
 
   const alumniRecord = alumni.find((a) => a.id === alumniId || a._id === alumniId)
-  const alumniBadges = badges.filter((b) => b.alumniId === alumniId || b.alumniId === alumniRecord?._id)
-  const mentor = mentors.find((m) => m.alumniId === alumniId)
+  const alumniBadges = badges
   const isAdmin = currentUser?.role === "admin"
 
   if (!alumniRecord) {
@@ -52,26 +51,8 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
 
   const initials = `${alumniRecord.firstName[0]}${alumniRecord.lastName[0]}`
 
-  const hasRequestedMentorship = mentor && mentorRequests.some(
-    (r) => r.mentorId === mentor.id && r.userId === currentUser?.id
-  )
-
-  const handleRequestMentorship = () => {
-    if (!mentor) return
-    if (hasRequestedMentorship) {
-      toast.info("Request already sent.")
-      return
-    }
-    if (mentor.id === undefined) return
-    requestMentorship(mentor.id, currentUser?.id || null)
-    toast.success(`Mentorship request sent to ${alumniRecord.firstName}!`)
-  }
-
   const handleDelete = () => {
-    if (alumniRecord.id === undefined) return
-    deleteAlumni(alumniRecord.id)
-    toast.success("Alumni deleted.")
-    onBack()
+    toast.info("Delete functionality will be available soon.")
   }
 
   const formatDate = (dateString: string) => {
@@ -99,10 +80,10 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
         <div className="flex-1" />
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-[var(--secondary)] flex items-center justify-center font-bold text-sm text-[var(--primary)]">
-            {currentUser ? currentUser.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) : "?"}
+            {currentUser ? `${currentUser.firstName[0]}${currentUser.lastName[0]}`.toUpperCase() : "?"}
           </div>
           <span className="hidden lg:block text-sm text-white/75 whitespace-nowrap">
-            {currentUser?.name}
+            {currentUser?.fullName || currentUser?.email}
           </span>
           <span className="hidden lg:block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[var(--secondary)]/20 text-[var(--gold-light)]">
             {currentUser?.role}
@@ -259,58 +240,7 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
             </div>
           </div>
 
-          {/* Mentorship Card (if mentor) */}
-          {mentor && (
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
-              <div className="px-5 py-4 border-b border-border">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Mentorship</h4>
-              </div>
-              <div className="p-5 space-y-3">
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Expertise</div>
-                  <div className="text-sm">{mentor.expertise}</div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Experience</div>
-                  <div className="text-sm">{mentor.experience || 0} years</div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Availability</div>
-                  <div className="text-sm">{mentor.availability}</div>
-                </div>
-                {mentor.industry && (
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Industry</div>
-                    <div className="text-sm">{mentor.industry}</div>
-                  </div>
-                )}
-                {mentor.bio && (
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">About</div>
-                    <div className="text-sm">{mentor.bio}</div>
-                  </div>
-                )}
-                <button
-                  onClick={handleRequestMentorship}
-                  disabled={!!hasRequestedMentorship}
-                  className={`w-full py-2 px-4 rounded-lg font-bold text-sm transition-all mt-2 ${
-                    hasRequestedMentorship
-                      ? "bg-green-50 border border-green-200 text-green-600 cursor-default"
-                      : "border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
-                  }`}
-                >
-                  {hasRequestedMentorship ? (
-                    <span className="flex items-center justify-center gap-1">
-                      <Check className="h-4 w-4" />
-                      Request Sent
-                    </span>
-                  ) : (
-                    "Request Mentorship"
-                  )}
-                </button>
-              </div>
-            </div>
-          )}
+
 
           {/* Badges Card */}
           <div className="bg-card border border-border rounded-xl overflow-hidden">
@@ -323,7 +253,7 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
               {alumniBadges.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {alumniBadges.map((b) => {
-                    const def = BADGE_DEFINITIONS.find((d) => d.id === b.type)
+                    const def = BADGE_DEFINITIONS.find((d) => d.id === b.badgeType)
                     return def ? (
                       <span
                         key={b.id}
@@ -334,7 +264,7 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
                         </span>
                         <span>
                           <span className="font-bold text-xs">{def.name}</span>
-                          {b.date && <span className="block text-[10px] text-muted-foreground">{formatDate(b.date)}</span>}
+                          {b.awardedAt && <span className="block text-[10px] text-muted-foreground">{formatDate(b.awardedAt)}</span>}
                         </span>
                       </span>
                     ) : null
@@ -411,7 +341,7 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
               <div className="p-5">
                 <div className="space-y-5">
                   {alumniBadges.map((b, index) => {
-                    const def = BADGE_DEFINITIONS.find((d) => d.id === b.type)
+                    const def = BADGE_DEFINITIONS.find((d) => d.id === b.badgeType)
                     return def ? (
                       <div key={b.id} className="flex gap-3.5 relative">
                         {index < alumniBadges.length - 1 && (
@@ -422,7 +352,7 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
                         </div>
                         <div className="pt-0.5">
                           <div className="font-bold text-sm">{def.name}</div>
-                          {b.date && <div className="text-xs text-muted-foreground">{formatDate(b.date)}</div>}
+                          {b.awardedAt && <div className="text-xs text-muted-foreground">{formatDate(b.awardedAt)}</div>}
                           <div className="text-xs text-muted-foreground mt-1">{b.reason || def.desc}</div>
                         </div>
                       </div>

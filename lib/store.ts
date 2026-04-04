@@ -6,6 +6,16 @@ import type { IUser } from '@/lib/models/accounts/User.model'
 import type { IEvent } from '@/lib/models/events/Event.model'
 import type { IJob } from '@/lib/models/jobs/Job.model'
 import type { IBadge } from '@/lib/models/badges/Badge.model'
+import { BADGE_TYPES } from '@/lib/models/badges/Badge.model'
+
+// Re-export badge definitions for use in components
+export { BADGE_TYPES as BADGE_DEFINITIONS }
+
+// Export types for components
+export type Alumni = any
+export type Event = any
+export type Job = any
+export type Badge = any
 
 export interface User {
   id: string
@@ -26,6 +36,8 @@ interface AlumniStore {
   events: any[]
   jobs: any[]
   badges: any[]
+  mentors: any[]
+  eventRegistrations: any[]
 
   // Loading states
   isLoading: boolean
@@ -43,7 +55,23 @@ interface AlumniStore {
   fetchEvents: (status?: string) => Promise<void>
   fetchJobs: (filters?: Record<string, string>) => Promise<void>
   fetchBadges: (userId?: string) => Promise<void>
+  fetchMentors: () => Promise<void>
   seedDatabase: () => Promise<{ success: boolean; message: string }>
+
+  // Alumni CRUD
+  addAlumni: (data: any) => void
+  updateAlumni: (id: string, data: any) => void
+  deleteAlumni: (id: string) => void
+
+  // Events CRUD
+  addEvent: (data: any) => void
+  updateEvent: (id: string, data: any) => void
+  deleteEvent: (id: string) => void
+
+  // Jobs CRUD
+  addJob: (data: any) => void
+  updateJob: (id: string, data: any) => void
+  deleteJob: (id: string) => void
 
   // Admin actions
   promoteToAdmin: (userId: string) => Promise<boolean>
@@ -52,6 +80,7 @@ interface AlumniStore {
 
   // Event registration
   registerEvent: (eventId: string) => Promise<boolean>
+  unregisterEvent: (eventId: string) => Promise<boolean>
 
   // Job save
   toggleSaveJob: (jobId: string) => Promise<boolean>
@@ -65,6 +94,8 @@ export const useAlumniStore = create<AlumniStore>()(
       events: [],
       jobs: [],
       badges: [],
+      mentors: [],
+      eventRegistrations: [],
       currentUser: null,
       isLoading: false,
       error: null,
@@ -156,6 +187,25 @@ export const useAlumniStore = create<AlumniStore>()(
         }
       },
 
+      // Fetch mentors
+      fetchMentors: async () => {
+        set({ isLoading: true, error: null })
+        try {
+          const res = await fetch('/api/mentorship')
+          if (res.ok) {
+            const data = await res.json()
+            set({ mentors: data })
+          } else {
+            throw new Error('Failed to fetch mentors')
+          }
+        } catch (error: any) {
+          set({ error: error.message })
+          console.error('Failed to fetch mentors:', error)
+        } finally {
+          set({ isLoading: false })
+        }
+      },
+
       // Seed database
       seedDatabase: async () => {
         try {
@@ -168,6 +218,7 @@ export const useAlumniStore = create<AlumniStore>()(
               get().fetchEvents(),
               get().fetchJobs(),
               get().fetchBadges(),
+              get().fetchMentors(),
             ])
             return { success: true, message: 'Database seeded successfully' }
           }
@@ -264,6 +315,72 @@ export const useAlumniStore = create<AlumniStore>()(
           return res.ok
         } catch (error) {
           console.error('Failed to toggle save job:', error)
+          return false
+        }
+      },
+
+      // Alumni CRUD stub functions
+      addAlumni: (data) => {
+        console.log('Add alumni stub:', data)
+        // TODO: Implement API call to add alumni
+      },
+
+      updateAlumni: (id, data) => {
+        console.log('Update alumni stub:', id, data)
+        // TODO: Implement API call to update alumni
+      },
+
+      deleteAlumni: (id) => {
+        console.log('Delete alumni stub:', id)
+        // TODO: Implement API call to delete alumni
+      },
+
+      // Events CRUD stub functions
+      addEvent: (data) => {
+        console.log('Add event stub:', data)
+        // TODO: Implement API call to add event
+      },
+
+      updateEvent: (id, data) => {
+        console.log('Update event stub:', id, data)
+        // TODO: Implement API call to update event
+      },
+
+      deleteEvent: (id) => {
+        console.log('Delete event stub:', id)
+        // TODO: Implement API call to delete event
+      },
+
+      // Jobs CRUD stub functions
+      addJob: (data) => {
+        console.log('Add job stub:', data)
+        // TODO: Implement API call to add job
+      },
+
+      updateJob: (id, data) => {
+        console.log('Update job stub:', id, data)
+        // TODO: Implement API call to update job
+      },
+
+      deleteJob: (id) => {
+        console.log('Delete job stub:', id)
+        // TODO: Implement API call to delete job
+      },
+
+      // Unregister from event
+      unregisterEvent: async (eventId) => {
+        try {
+          const res = await fetch('/api/events/unregister', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              eventId,
+              userId: get().currentUser?.id,
+            }),
+          })
+          return res.ok
+        } catch (error) {
+          console.error('Failed to unregister from event:', error)
           return false
         }
       },
