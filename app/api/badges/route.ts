@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongoose'
-import { Badge, BADGE_TYPES, Notification, AuditLog } from '@/models'
+import { Badge, Notification, AuditLog } from '@/models'
+import { BADGE_TYPES } from '@/lib/constants/badges'
 import { Types } from 'mongoose'
 
 /**

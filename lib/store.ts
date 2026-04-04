@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { BADGE_TYPES } from '@/lib/models/badges/Badge.model'
+import { BADGE_TYPES } from '@/lib/constants/badges'
 
 // Re-export badge definitions for use in components
 export { BADGE_TYPES as BADGE_DEFINITIONS }
