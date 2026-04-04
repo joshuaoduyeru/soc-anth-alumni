@@ -60,8 +60,6 @@ export async function POST(req: NextRequest) {
       location,
       bio,
       education,
-      skills,
-      interests,
     } = await req.json()
 
     // Validate required fields
@@ -96,8 +94,6 @@ export async function POST(req: NextRequest) {
       location: location || null,
       bio: bio || null,
       education: education || [],
-      skills: skills || [],
-      interests: interests || [],
       notificationPreferences: {
         emailOnEvent: true,
         emailOnJobPost: true,

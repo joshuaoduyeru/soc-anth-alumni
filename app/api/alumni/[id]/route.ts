@@ -36,8 +36,8 @@ export async function GET(
       location: user.location,
       bio: user.bio,
       avatarUrl: user.avatarUrl,
-      skills: user.skills,
       education: user.education,
+      socialLinks: user.socialLinks,
       createdAt: user.createdAt,
     })
   } catch (error) {
