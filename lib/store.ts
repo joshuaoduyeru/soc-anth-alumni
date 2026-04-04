@@ -538,16 +538,12 @@ export const useAlumniStore = create<AlumniStore>()(
       // ── Mentors ──────────────────────────────────────────────────────────────
       addMentor: (data) => {
         // Optimistic local add (API integration can be wired later)
-        const newMentor: Mentor = {
-          ...data,
-          id: Date.now(),
-        }
+        const newMentor = { ...data } as Mentor
         set((state) => ({ mentors: [...state.mentors, newMentor] }))
       },
 
       requestMentorship: (mentorId, userId) => {
         const newReq: MentorRequest = {
-          id: Date.now(),
           mentorId,
           userId: userId ?? undefined,
           status: 'pending',
@@ -558,7 +554,6 @@ export const useAlumniStore = create<AlumniStore>()(
       // ── Event registration ────────────────────────────────────────────────────
       registerEvent: (eventId, userId) => {
         const newReg: EventRegistration = {
-          id: Date.now(),
           eventId,
           userId: userId ?? undefined,
         }
@@ -588,7 +583,6 @@ export const useAlumniStore = create<AlumniStore>()(
           })
           // Optimistic update so history shows immediately
           const comm: Communication = {
-            id: Date.now(),
             ...data,
             ts: new Date().toISOString(),
           }
