@@ -46,14 +46,16 @@ export function LoginView({ onSwitchToSignup }: LoginViewProps) {
       if (res.ok) {
         const user = await res.json()
         setCurrentUser({
-          _id: user._id,
+          id: user._id || user.id,
           email: user.email,
-          role: user.isAdmin ? "admin" : "alumni",
-          name: user.firstName ? `${user.firstName} ${user.lastName}` : user.name || "User",
           firstName: user.firstName,
           lastName: user.lastName,
-          id: user._id,
-          isAdmin: user.isAdmin,
+          fullName: user.fullName || `${user.firstName} ${user.lastName}`,
+          role: user.role === "admin" ? "admin" : "alumni",
+          isAdmin: user.role === "admin",
+          avatarUrl: user.avatarUrl,
+          company: user.company,
+          jobTitle: user.jobTitle,
         })
         toast.success(`Welcome back, ${user.firstName || "User"}!`)
       } else {

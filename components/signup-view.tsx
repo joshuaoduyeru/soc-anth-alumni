@@ -67,14 +67,16 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
       if (newAlumni) {
         // Auto-login the user
         setCurrentUser({
-          _id: newAlumni._id,
+          id: newAlumni._id || newAlumni.id,
           email: data.email,
-          role: "alumni",
-          name: `${data.firstName} ${data.lastName}`,
           firstName: data.firstName,
           lastName: data.lastName,
-          id: newAlumni._id || newAlumni.id || null,
+          fullName: `${data.firstName} ${data.lastName}`,
+          role: "alumni",
           isAdmin: false,
+          avatarUrl: undefined,
+          company: undefined,
+          jobTitle: undefined,
         })
         toast.success(`Welcome to OAU-SAN, ${data.firstName}!`)
       } else {
