@@ -13,50 +13,38 @@ export function DashboardSection({ onViewProfile }: DashboardSectionProps) {
 
   const upcomingEvents = events.filter((e) => new Date(e.date) >= new Date())
 
+  // Derive display name safely
+  const displayName =
+    currentUser?.fullName ||
+    currentUser?.name ||
+    (currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "")
+
   const stats = [
-    {
-      label: "Total Alumni",
-      value: alumni.length,
-      icon: GraduationCap,
-    },
-    {
-      label: "Upcoming Events",
-      value: upcomingEvents.length,
-      icon: Calendar,
-    },
-    {
-      label: "Active Jobs",
-      value: jobs.length,
-      icon: Briefcase,
-    },
-    {
-      label: "Mentors",
-      value: mentors.length,
-      icon: Users,
-    },
+    { label: "Total Alumni",    value: alumni.length,          icon: GraduationCap },
+    { label: "Upcoming Events", value: upcomingEvents.length,  icon: Calendar },
+    { label: "Active Jobs",     value: jobs.length,            icon: Briefcase },
+    { label: "Mentors",         value: mentors.length,         icon: Users },
   ]
 
-  // Recent activity simulation
   const recentActivity = [
     { text: "Platform launched with seed data", time: "Recently" },
     ...badges.slice(-3).reverse().map((b) => {
       const al = alumni.find((a) => a.id === b.alumniId || a._id === b.alumniId)
       return {
-        text: `Badge awarded to ${al?.firstName || "Alumni"} ${al?.lastName || ""}`,
+        text: `Badge awarded to ${al?.firstName ?? "Alumni"} ${al?.lastName ?? ""}`.trim(),
         time: b.date ? new Date(b.date).toLocaleDateString() : "Recently",
       }
     }),
   ]
 
-  // Network snapshot
   const degreeBreakdown = {
     "Bachelor's": alumni.filter((a) => a.degree === "Bachelor's").length,
-    "Master's": alumni.filter((a) => a.degree === "Master's").length,
-    PhD: alumni.filter((a) => a.degree === "PhD").length,
+    "Master's":   alumni.filter((a) => a.degree === "Master's").length,
+    PhD:          alumni.filter((a) => a.degree === "PhD").length,
   }
 
-  const uniqueCompanies = new Set(alumni.map((a) => a.company).filter(Boolean)).size
-  const uniqueLocations = new Set(
+  const uniqueCompanies  = new Set(alumni.map((a) => a.company).filter(Boolean)).size
+  const uniqueLocations  = new Set(
     alumni.map((a) => a.location?.split(",").pop()?.trim()).filter(Boolean)
   ).size
 
@@ -69,7 +57,7 @@ export function DashboardSection({ onViewProfile }: DashboardSectionProps) {
         <h1 className="font-serif text-4xl font-bold text-white mb-1 relative">Dashboard</h1>
         <p className="text-white/45 text-sm relative">
           Welcome to OAU-SAN (Obafemi Awolowo University Sociology and Anthropology Alumni Network)
-          {currentUser && `, ${currentUser.name}`}.
+          {displayName ? `, ${displayName}` : ""}.
         </p>
       </div>
 

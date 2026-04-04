@@ -1,27 +1,21 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-// Export types from models
-import type { IUser } from '@/lib/models/accounts/User.model'
-import type { IEvent } from '@/lib/models/events/Event.model'
-import type { IJob } from '@/lib/models/jobs/Job.model'
-import type { IBadge } from '@/lib/models/badges/Badge.model'
 import { BADGE_TYPES } from '@/lib/models/badges/Badge.model'
 
 // Re-export badge definitions for use in components
 export { BADGE_TYPES as BADGE_DEFINITIONS }
 
-// Export types for components
-export type Alumni = any
-export type Event = any
-export type Job = any
-export type Badge = any
+// ─── Shared types ────────────────────────────────────────────────────────────
 
 export interface User {
   id: string
+  _id?: string
   email: string
   firstName: string
   lastName: string
+  /** Computed full name — kept for convenience */
+  name: string
   fullName: string
   role: 'admin' | 'alumni'
   isAdmin: boolean
@@ -30,28 +24,144 @@ export interface User {
   jobTitle?: string
 }
 
-interface AlumniStore {
-  // Data
-  alumni: any[]
-  events: any[]
-  jobs: any[]
-  badges: any[]
-  mentors: any[]
-  eventRegistrations: any[]
-  communications: any[]
+export type Alumni = {
+  id?: string | number
+  _id?: string
+  firstName: string
+  lastName: string
+  email: string
+  year: number
+  degree: string
+  major?: string
+  company?: string
+  jobTitle?: string
+  phone?: string
+  location?: string
+  linkedin?: string
+  bio?: string
+  [key: string]: any
+}
 
-  // Loading states
+export type Event = {
+  id?: string | number
+  _id?: string
+  title: string
+  date: string
+  time: string
+  location?: string
+  description?: string
+  maxAttendees?: number | string
+  type: string
+  [key: string]: any
+}
+
+export type Job = {
+  id?: string | number
+  _id?: string
+  title: string
+  company: string
+  location?: string
+  type: string
+  salary?: string
+  industry?: string
+  description?: string
+  link?: string
+  [key: string]: any
+}
+
+export type Badge = {
+  id?: string | number
+  _id?: string
+  alumniId?: string | number
+  type?: string
+  badgeType?: string
+  reason?: string
+  date?: string
+  awardedAt?: string
+  [key: string]: any
+}
+
+export type Mentor = {
+  id?: string | number
+  _id?: string
+  alumniId?: string | number
+  expertise: string
+  experience?: string | number
+  availability: 'Weekly' | 'Bi-weekly' | 'Monthly'
+  industry?: string
+  bio?: string
+  [key: string]: any
+}
+
+export type MentorRequest = {
+  id?: string | number
+  _id?: string
+  mentorId?: string | number
+  userId?: string | number
+  menteeId?: string | number
+  status?: string
+  [key: string]: any
+}
+
+export type EventRegistration = {
+  id?: string | number
+  _id?: string
+  eventId?: string | number
+  userId?: string | number
+  [key: string]: any
+}
+
+export type Communication = {
+  id?: string | number
+  _id?: string
+  subject: string
+  body: string
+  recipient: string
+  recipientLabel: string
+  count: number
+  ts: string
+  [key: string]: any
+}
+
+// ─── Icon map (previously JOB_ICONS, kept for backwards compat) ──────────────
+
+export const JOB_ICONS: Record<string, string> = {
+  Technology: '💻',
+  Finance: '📈',
+  Healthcare: '❤️',
+  Design: '🎨',
+  Marketing: '📣',
+  Engineering: '🔧',
+  Education: '📚',
+  Legal: '⚖️',
+  Science: '🔬',
+  Media: '📻',
+}
+
+// ─── Store interface ──────────────────────────────────────────────────────────
+
+interface AlumniStore {
+  // ── Data ───────────────────────────────────────────────────────────────────
+  alumni: Alumni[]
+  events: Event[]
+  jobs: Job[]
+  badges: Badge[]
+  mentors: Mentor[]
+  mentorRequests: MentorRequest[]
+  eventRegistrations: EventRegistration[]
+  communications: Communication[]
+  savedJobs: (string | number)[]
+
+  // ── Loading / error ────────────────────────────────────────────────────────
   isLoading: boolean
   error: string | null
 
-  // Auth
+  // ── Auth ───────────────────────────────────────────────────────────────────
   currentUser: User | null
-
-  // Actions
   setCurrentUser: (user: User | null) => void
   logout: () => void
 
-  // Data fetching
+  // ── Data fetching ──────────────────────────────────────────────────────────
   fetchAlumni: () => Promise<void>
   fetchEvents: (status?: string) => Promise<void>
   fetchJobs: (filters?: Record<string, string>) => Promise<void>
@@ -59,60 +169,74 @@ interface AlumniStore {
   fetchMentors: () => Promise<void>
   seedDatabase: () => Promise<{ success: boolean; message: string }>
 
-  // Alumni CRUD
-  addAlumni: (data: any) => void
-  updateAlumni: (id: string, data: any) => void
-  deleteAlumni: (id: string) => void
+  // ── Alumni CRUD ────────────────────────────────────────────────────────────
+  addAlumni: (data: any) => Promise<Alumni | null>
+  updateAlumni: (id: string | number, data: any) => Promise<void>
+  deleteAlumni: (id: string | number) => Promise<void>
 
-  // Events CRUD
-  addEvent: (data: any) => void
-  updateEvent: (id: string, data: any) => void
-  deleteEvent: (id: string) => void
+  // ── Events CRUD ────────────────────────────────────────────────────────────
+  addEvent: (data: any) => Promise<void>
+  updateEvent: (id: string | number, data: any) => Promise<void>
+  deleteEvent: (id: string | number) => Promise<void>
 
-  // Jobs CRUD
-  addJob: (data: any) => void
-  updateJob: (id: string, data: any) => void
-  deleteJob: (id: string) => void
+  // ── Jobs CRUD ──────────────────────────────────────────────────────────────
+  addJob: (data: any) => Promise<void>
+  updateJob: (id: string | number, data: any) => Promise<void>
+  deleteJob: (id: string | number) => Promise<void>
 
-  // Badge operations
+  // ── Badges ─────────────────────────────────────────────────────────────────
   awardBadge: (data: { alumniId: string | number; type: string; reason?: string }) => Promise<boolean>
 
-  // Communications
-  sendNewsletter: (data: { subject: string; body: string; recipient: string; recipientLabel: string; count: number }) => Promise<boolean>
+  // ── Mentors ────────────────────────────────────────────────────────────────
+  addMentor: (data: Omit<Mentor, 'id' | '_id'>) => void
+  requestMentorship: (mentorId: string | number, userId: string | number | null) => void
 
-  // Admin actions
+  // ── Event registration ─────────────────────────────────────────────────────
+  registerEvent: (eventId: string | number, userId: string | null) => void
+  unregisterEvent: (eventId: string | number, userId: string | null) => void
+
+  // ── Communications ─────────────────────────────────────────────────────────
+  sendNewsletter: (data: {
+    subject: string
+    body: string
+    recipient: string
+    recipientLabel: string
+    count: number
+  }) => Promise<boolean>
+
+  // ── Job save ───────────────────────────────────────────────────────────────
+  toggleSaveJob: (jobId: string | number) => Promise<boolean>
+
+  // ── Admin ──────────────────────────────────────────────────────────────────
   promoteToAdmin: (userId: string) => Promise<boolean>
   removeAdminPrivileges: (userId: string) => Promise<boolean>
   fetchAdmins: () => Promise<void>
-
-  // Event registration
-  registerEvent: (eventId: string) => Promise<boolean>
-  unregisterEvent: (eventId: string) => Promise<boolean>
-
-  // Job save
-  toggleSaveJob: (jobId: string) => Promise<boolean>
 }
+
+// ─── Store implementation ─────────────────────────────────────────────────────
 
 export const useAlumniStore = create<AlumniStore>()(
   persist(
     (set, get) => ({
-      // Initial data
+      // ── Initial state ───────────────────────────────────────────────────────
       alumni: [],
       events: [],
       jobs: [],
       badges: [],
       mentors: [],
+      mentorRequests: [],
       eventRegistrations: [],
       communications: [],
+      savedJobs: [],
       currentUser: null,
       isLoading: false,
       error: null,
 
+      // ── Auth ────────────────────────────────────────────────────────────────
       setCurrentUser: (user) => set({ currentUser: user }),
-
       logout: () => set({ currentUser: null }),
 
-      // Fetch alumni
+      // ── Alumni fetch ────────────────────────────────────────────────────────
       fetchAlumni: async () => {
         set({ isLoading: true, error: null })
         try {
@@ -125,68 +249,91 @@ export const useAlumniStore = create<AlumniStore>()(
           }
         } catch (error: any) {
           set({ error: error.message })
-          console.error('Failed to fetch alumni:', error)
         } finally {
           set({ isLoading: false })
         }
       },
 
-      // Fetch events
+      // ── Events fetch ────────────────────────────────────────────────────────
       fetchEvents: async (status) => {
         set({ isLoading: true, error: null })
         try {
-          const url = new URL('/api/events', typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+          const url = new URL('/api/events', window.location.origin)
           if (status) url.searchParams.set('status', status)
           const res = await fetch(url.toString())
           if (res.ok) {
             const data = await res.json()
-            set({ events: data })
+            // Normalise API shape → local shape expected by components
+            set({
+              events: data.map((e: any) => ({
+                ...e,
+                // components read e.date / e.time — map from startDate
+                date: e.startDate ?? e.date,
+                time: e.startDate
+                  ? new Date(e.startDate).toTimeString().slice(0, 5)
+                  : e.time ?? '',
+              })),
+            })
           } else {
             throw new Error('Failed to fetch events')
           }
         } catch (error: any) {
           set({ error: error.message })
-          console.error('Failed to fetch events:', error)
         } finally {
           set({ isLoading: false })
         }
       },
 
-      // Fetch jobs
+      // ── Jobs fetch ──────────────────────────────────────────────────────────
       fetchJobs: async (filters) => {
         set({ isLoading: true, error: null })
         try {
-          const url = new URL('/api/jobs', typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+          const url = new URL('/api/jobs', window.location.origin)
           if (filters) {
-            Object.entries(filters).forEach(([key, value]) => {
-              url.searchParams.set(key, value)
-            })
+            Object.entries(filters).forEach(([k, v]) => url.searchParams.set(k, v))
           }
           const res = await fetch(url.toString())
           if (res.ok) {
             const data = await res.json()
-            set({ jobs: data })
+            set({
+              jobs: data.map((j: any) => ({
+                ...j,
+                // components read j.salary — map from salaryRange
+                salary: j.salaryRange ?? j.salary,
+                link: j.applicationUrl ?? j.link,
+              })),
+            })
           } else {
             throw new Error('Failed to fetch jobs')
           }
         } catch (error: any) {
           set({ error: error.message })
-          console.error('Failed to fetch jobs:', error)
         } finally {
           set({ isLoading: false })
         }
       },
 
-      // Fetch badges
+      // ── Badges fetch ────────────────────────────────────────────────────────
       fetchBadges: async (userId) => {
         set({ isLoading: true, error: null })
         try {
-          const url = new URL('/api/badges', typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+          const url = new URL('/api/badges', window.location.origin)
           if (userId) url.searchParams.set('userId', userId)
           const res = await fetch(url.toString())
           if (res.ok) {
-            const data = Array.isArray(res.json) ? await res.json() : []
-            set({ badges: data })
+            const data = await res.json()
+            const badges = Array.isArray(data) ? data : []
+            set({
+              badges: badges.map((b: any) => ({
+                ...b,
+                // components use b.type — map from badgeType
+                type: b.badgeType ?? b.type,
+                // components use b.alumniId — map from recipient
+                alumniId: b.recipient ?? b.alumniId,
+                // components use b.date — map from awardedAt
+                date: b.awardedAt ?? b.date,
+              })),
+            })
           }
         } catch (error: any) {
           console.error('Failed to fetch badges:', error)
@@ -195,32 +342,29 @@ export const useAlumniStore = create<AlumniStore>()(
         }
       },
 
-      // Fetch mentors
+      // ── Mentors fetch ────────────────────────────────────────────────────────
       fetchMentors: async () => {
         set({ isLoading: true, error: null })
         try {
           const res = await fetch('/api/mentorship')
           if (res.ok) {
             const data = await res.json()
-            set({ mentors: data })
+            set({ mentors: Array.isArray(data) ? data : [] })
           } else {
             throw new Error('Failed to fetch mentors')
           }
         } catch (error: any) {
           set({ error: error.message })
-          console.error('Failed to fetch mentors:', error)
         } finally {
           set({ isLoading: false })
         }
       },
 
-      // Seed database
+      // ── Seed ────────────────────────────────────────────────────────────────
       seedDatabase: async () => {
         try {
           const res = await fetch('/api/seed', { method: 'POST' })
           if (res.ok) {
-            const data = await res.json()
-            // Refetch all data after seeding
             await Promise.all([
               get().fetchAlumni(),
               get().fetchEvents(),
@@ -232,50 +376,285 @@ export const useAlumniStore = create<AlumniStore>()(
           }
           return { success: false, message: 'Failed to seed database' }
         } catch (error: any) {
-          console.error('Failed to seed database:', error)
           return { success: false, message: error.message }
         }
       },
 
-      // Admin - Promote to admin
+      // ── Alumni CRUD ─────────────────────────────────────────────────────────
+      addAlumni: async (data) => {
+        try {
+          const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          if (res.ok) {
+            const newAlumni = await res.json()
+            // Refresh list
+            await get().fetchAlumni()
+            return newAlumni
+          }
+          return null
+        } catch (error) {
+          console.error('Failed to add alumni:', error)
+          return null
+        }
+      },
+
+      updateAlumni: async (id, data) => {
+        try {
+          await fetch(`/api/alumni/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          await get().fetchAlumni()
+        } catch (error) {
+          console.error('Failed to update alumni:', error)
+        }
+      },
+
+      deleteAlumni: async (id) => {
+        try {
+          await fetch(`/api/alumni/${id}`, { method: 'DELETE' })
+          set((state) => ({
+            alumni: state.alumni.filter((a) => a._id !== id && a.id !== id),
+          }))
+        } catch (error) {
+          console.error('Failed to delete alumni:', error)
+        }
+      },
+
+      // ── Events CRUD ─────────────────────────────────────────────────────────
+      addEvent: async (data) => {
+        try {
+          const res = await fetch('/api/events', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...data,
+              startDate: data.date,
+              endDate: data.date,
+              createdBy: get().currentUser?.id,
+            }),
+          })
+          if (res.ok) await get().fetchEvents()
+        } catch (error) {
+          console.error('Failed to add event:', error)
+        }
+      },
+
+      updateEvent: async (id, data) => {
+        try {
+          await fetch(`/api/events/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          await get().fetchEvents()
+        } catch (error) {
+          console.error('Failed to update event:', error)
+        }
+      },
+
+      deleteEvent: async (id) => {
+        try {
+          await fetch(`/api/events/${id}`, { method: 'DELETE' })
+          set((state) => ({
+            events: state.events.filter((e) => e._id !== id && e.id !== id),
+          }))
+        } catch (error) {
+          console.error('Failed to delete event:', error)
+        }
+      },
+
+      // ── Jobs CRUD ────────────────────────────────────────────────────────────
+      addJob: async (data) => {
+        try {
+          const res = await fetch('/api/jobs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...data,
+              salaryRange: data.salary,
+              applicationUrl: data.link,
+              postedBy: get().currentUser?.id,
+            }),
+          })
+          if (res.ok) await get().fetchJobs()
+        } catch (error) {
+          console.error('Failed to add job:', error)
+        }
+      },
+
+      updateJob: async (id, data) => {
+        try {
+          await fetch(`/api/jobs/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+          await get().fetchJobs()
+        } catch (error) {
+          console.error('Failed to update job:', error)
+        }
+      },
+
+      deleteJob: async (id) => {
+        try {
+          await fetch(`/api/jobs/${id}`, { method: 'DELETE' })
+          set((state) => ({
+            jobs: state.jobs.filter((j) => j._id !== id && j.id !== id),
+          }))
+        } catch (error) {
+          console.error('Failed to delete job:', error)
+        }
+      },
+
+      // ── Badges ───────────────────────────────────────────────────────────────
+      awardBadge: async (data) => {
+        try {
+          const res = await fetch('/api/badges', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              recipientId: data.alumniId,
+              badgeType: data.type,
+              reason: data.reason ?? null,
+              awardedBy: get().currentUser?.id,
+            }),
+          })
+          if (res.ok) {
+            await get().fetchBadges()
+            return true
+          }
+          return false
+        } catch (error) {
+          console.error('Failed to award badge:', error)
+          return false
+        }
+      },
+
+      // ── Mentors ──────────────────────────────────────────────────────────────
+      addMentor: (data) => {
+        // Optimistic local add (API integration can be wired later)
+        const newMentor: Mentor = {
+          id: Date.now(),
+          ...data,
+        }
+        set((state) => ({ mentors: [...state.mentors, newMentor] }))
+      },
+
+      requestMentorship: (mentorId, userId) => {
+        const newReq: MentorRequest = {
+          id: Date.now(),
+          mentorId,
+          userId: userId ?? undefined,
+          status: 'pending',
+        }
+        set((state) => ({ mentorRequests: [...state.mentorRequests, newReq] }))
+      },
+
+      // ── Event registration ────────────────────────────────────────────────────
+      registerEvent: (eventId, userId) => {
+        const newReg: EventRegistration = {
+          id: Date.now(),
+          eventId,
+          userId: userId ?? undefined,
+        }
+        set((state) => ({ eventRegistrations: [...state.eventRegistrations, newReg] }))
+      },
+
+      unregisterEvent: (eventId, userId) => {
+        set((state) => ({
+          eventRegistrations: state.eventRegistrations.filter(
+            (r) => !(r.eventId === eventId && r.userId === userId)
+          ),
+        }))
+      },
+
+      // ── Communications ────────────────────────────────────────────────────────
+      sendNewsletter: async (data) => {
+        try {
+          const res = await fetch('/api/communications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              subject: data.subject,
+              body: data.body,
+              recipientType: data.recipient,
+              sentBy: get().currentUser?.id,
+            }),
+          })
+          // Optimistic update so history shows immediately
+          const comm: Communication = {
+            id: Date.now(),
+            ...data,
+            ts: new Date().toISOString(),
+          }
+          set((state) => ({ communications: [...state.communications, comm] }))
+          return res.ok
+        } catch (error) {
+          console.error('Failed to send newsletter:', error)
+          return false
+        }
+      },
+
+      // ── Job save ──────────────────────────────────────────────────────────────
+      toggleSaveJob: async (jobId) => {
+        // Optimistic toggle
+        const isSaved = get().savedJobs.includes(jobId)
+        set((state) => ({
+          savedJobs: isSaved
+            ? state.savedJobs.filter((id) => id !== jobId)
+            : [...state.savedJobs, jobId],
+        }))
+        try {
+          await fetch('/api/jobs/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jobId, userId: get().currentUser?.id }),
+          })
+          return true
+        } catch (error) {
+          // Revert on failure
+          set((state) => ({
+            savedJobs: isSaved
+              ? [...state.savedJobs, jobId]
+              : state.savedJobs.filter((id) => id !== jobId),
+          }))
+          return false
+        }
+      },
+
+      // ── Admin ─────────────────────────────────────────────────────────────────
       promoteToAdmin: async (userId) => {
         try {
           const res = await fetch('/api/admin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId,
-              adminId: get().currentUser?.id,
-            }),
+            body: JSON.stringify({ userId, adminId: get().currentUser?.id }),
           })
-          if (res.ok) {
-            return true
-          }
-          throw new Error('Failed to promote user')
+          return res.ok
         } catch (error) {
           console.error('Failed to promote to admin:', error)
           return false
         }
       },
 
-      // Admin - Remove admin privileges
       removeAdminPrivileges: async (userId) => {
         try {
-          const url = new URL('/api/admin', typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+          const url = new URL('/api/admin', window.location.origin)
           url.searchParams.set('userId', userId)
-          url.searchParams.set('adminId', get().currentUser?.id || '')
+          url.searchParams.set('adminId', get().currentUser?.id ?? '')
           const res = await fetch(url.toString(), { method: 'DELETE' })
-          if (res.ok) {
-            return true
-          }
-          throw new Error('Failed to remove admin privileges')
+          return res.ok
         } catch (error) {
           console.error('Failed to remove admin privileges:', error)
           return false
         }
       },
 
-      // Fetch admins
       fetchAdmins: async () => {
         set({ isLoading: true, error: null })
         try {
@@ -290,157 +669,18 @@ export const useAlumniStore = create<AlumniStore>()(
           set({ isLoading: false })
         }
       },
-
-      // Event registration
-      registerEvent: async (eventId) => {
-        try {
-          const res = await fetch('/api/events/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              eventId,
-              userId: get().currentUser?.id,
-            }),
-          })
-          return res.ok
-        } catch (error) {
-          console.error('Failed to register for event:', error)
-          return false
-        }
-      },
-
-      // Save/unsave job
-      toggleSaveJob: async (jobId) => {
-        try {
-          const res = await fetch('/api/jobs/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              jobId,
-              userId: get().currentUser?.id,
-            }),
-          })
-          return res.ok
-        } catch (error) {
-          console.error('Failed to toggle save job:', error)
-          return false
-        }
-      },
-
-      // Alumni CRUD stub functions
-      addAlumni: (data) => {
-        console.log('Add alumni stub:', data)
-        // TODO: Implement API call to add alumni
-      },
-
-      updateAlumni: (id, data) => {
-        console.log('Update alumni stub:', id, data)
-        // TODO: Implement API call to update alumni
-      },
-
-      deleteAlumni: (id) => {
-        console.log('Delete alumni stub:', id)
-        // TODO: Implement API call to delete alumni
-      },
-
-      // Events CRUD stub functions
-      addEvent: (data) => {
-        console.log('Add event stub:', data)
-        // TODO: Implement API call to add event
-      },
-
-      updateEvent: (id, data) => {
-        console.log('Update event stub:', id, data)
-        // TODO: Implement API call to update event
-      },
-
-      deleteEvent: (id) => {
-        console.log('Delete event stub:', id)
-        // TODO: Implement API call to delete event
-      },
-
-      // Jobs CRUD stub functions
-      addJob: (data) => {
-        console.log('Add job stub:', data)
-        // TODO: Implement API call to add job
-      },
-
-      updateJob: (id, data) => {
-        console.log('Update job stub:', id, data)
-        // TODO: Implement API call to update job
-      },
-
-      deleteJob: (id) => {
-        console.log('Delete job stub:', id)
-        // TODO: Implement API call to delete job
-      },
-
-      // Unregister from event
-      unregisterEvent: async (eventId) => {
-        try {
-          const res = await fetch('/api/events/unregister', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              eventId,
-              userId: get().currentUser?.id,
-            }),
-          })
-          return res.ok
-        } catch (error) {
-          console.error('Failed to unregister from event:', error)
-          return false
-        }
-      },
-
-      // Award badge to user
-      awardBadge: async (data) => {
-        try {
-          const res = await fetch('/api/badges', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              recipientId: data.alumniId,
-              badgeType: data.type,
-              reason: data.reason || null,
-              awardedBy: get().currentUser?.id,
-            }),
-          })
-          if (res.ok) {
-            // Refresh badges
-            await get().fetchBadges()
-            return true
-          }
-          return false
-        } catch (error) {
-          console.error('Failed to award badge:', error)
-          return false
-        }
-      },
-
-      // Send newsletter
-      sendNewsletter: async (data) => {
-        try {
-          const res = await fetch('/api/communications', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              subject: data.subject,
-              body: data.body,
-              recipientType: data.recipient,
-              sentBy: get().currentUser?.id,
-            }),
-          })
-          return res.ok
-        } catch (error) {
-          console.error('Failed to send newsletter:', error)
-          return false
-        }
-      },
     }),
     {
       name: 'oau-san-store',
-      partialize: (state) => ({ currentUser: state.currentUser }),
+      // Only persist auth — all data is re-fetched on load
+      partialize: (state) => ({
+        currentUser: state.currentUser,
+        savedJobs: state.savedJobs,
+        communications: state.communications,
+        eventRegistrations: state.eventRegistrations,
+        mentorRequests: state.mentorRequests,
+        mentors: state.mentors,
+      }),
     }
   )
 )
