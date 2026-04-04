@@ -135,7 +135,7 @@ export function JobsSection() {
   }
 
   const onSubmit = (data: JobFormData) => {
-    if (editingJob && editingJob.id != null) {
+    if (editingJob && editingJob._id != null) {
       updateJob(editingJob.id, data)
       toast.success("Job updated.")
     } else {
@@ -146,8 +146,8 @@ export function JobsSection() {
   }
 
   const handleDelete = () => {
-    if (deleteConfirm && deleteConfirm.id != null) {
-      deleteJob(deleteConfirm.id)
+    if (deleteConfirm && deleteConfirm._id != null) {
+      deleteJob(deleteConfirm._id)
       toast.success("Job deleted.")
       setDeleteConfirm(null)
     }
@@ -233,7 +233,7 @@ export function JobsSection() {
               
               return (
                 <div
-                  key={job.id}
+                  key={job._id}
                   className="bg-card border border-border rounded-xl p-5 flex gap-4 items-center transition-all hover:border-[var(--secondary)] hover:shadow-md hover:translate-x-1"
                 >
                   {/* Icon */}

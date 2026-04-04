@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose'
 
 export interface IBadgeType {
-  id: string
+  _id: string
   name: string
   icon: string
   description: string   // was missing — caused badge.desc errors in components
@@ -21,15 +21,15 @@ export interface IBadge extends Document {
 }
 
 export const BADGE_TYPES: IBadgeType[] = [
-  { id: 'pioneer',               name: 'Pioneer',               icon: '🚀', description: 'First to register on the platform',             category: 'milestone'    },
-  { id: 'super_mentor',          name: 'Super Mentor',          icon: '👨‍🏫', description: 'Demonstrated active and impactful mentorship',   category: 'mentorship'   },
-  { id: 'network_champion',      name: 'Network Champion',      icon: '🤝', description: 'Most connections within the alumni network',      category: 'community'    },
-  { id: 'distinguished_speaker', name: 'Distinguished Speaker', icon: '🎤', description: 'Presented at an alumni event',                   category: 'events'       },
-  { id: 'generous_donor',        name: 'Generous Donor',        icon: '💰', description: 'Made a financial contribution to the institution', category: 'contribution' },
-  { id: 'active_volunteer',      name: 'Active Volunteer',      icon: '🙋', description: 'Actively participated in volunteering activities', category: 'contribution' },
-  { id: 'career_achiever',       name: 'Career Achiever',       icon: '📈', description: 'Reached a significant career milestone',          category: 'milestone'    },
-  { id: 'top_recruiter',         name: 'Top Recruiter',         icon: '👔', description: 'Posted multiple job opportunities for the community', category: 'contribution' },
-  { id: 'alumni_of_the_year',    name: 'Alumni of the Year',    icon: '🎓', description: 'Recognised as Alumni of the Year',               category: 'award'        },
+  { _id: 'pioneer',               name: 'Pioneer',               icon: '🚀', description: 'First to register on the platform',             category: 'milestone'    },
+  { _id: 'super_mentor',          name: 'Super Mentor',          icon: '👨‍🏫', description: 'Demonstrated active and impactful mentorship',   category: 'mentorship'   },
+  { _id: 'network_champion',      name: 'Network Champion',      icon: '🤝', description: 'Most connections within the alumni network',      category: 'community'    },
+  { _id: 'distinguished_speaker', name: 'Distinguished Speaker', icon: '🎤', description: 'Presented at an alumni event',                   category: 'events'       },
+  { _id: 'generous_donor',        name: 'Generous Donor',        icon: '💰', description: 'Made a financial contribution to the institution', category: 'contribution' },
+  { _id: 'active_volunteer',      name: 'Active Volunteer',      icon: '🙋', description: 'Actively participated in volunteering activities', category: 'contribution' },
+  { _id: 'career_achiever',       name: 'Career Achiever',       icon: '📈', description: 'Reached a significant career milestone',          category: 'milestone'    },
+  { _id: 'top_recruiter',         name: 'Top Recruiter',         icon: '👔', description: 'Posted multiple job opportunities for the community', category: 'contribution' },
+  { _id: 'alumni_of_the_year',    name: 'Alumni of the Year',    icon: '🎓', description: 'Recognised as Alumni of the Year',               category: 'award'        },
 ]
 
 const BadgeSchema = new Schema<IBadge>(
@@ -43,7 +43,7 @@ const BadgeSchema = new Schema<IBadge>(
     badgeType: {
       type: String,
       required: [true, 'Badge type is required'],
-      enum: BADGE_TYPES.map((bt) => bt.id),
+      enum: BADGE_TYPES.map((bt) => bt._id),
     },
     reason: {
       type: String,

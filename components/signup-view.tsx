@@ -73,7 +73,7 @@ export function SignupView({ onSwitchToLogin }: SignupViewProps) {
       if (newAlumni) {
         const fullName = `${data.firstName} ${data.lastName}`
         setCurrentUser({
-          id: newAlumni._id ?? newAlumni.id ?? "",
+          id: newAlumni._id ?? "",
           email: data.email,
           firstName: data.firstName,
           lastName: data.lastName,

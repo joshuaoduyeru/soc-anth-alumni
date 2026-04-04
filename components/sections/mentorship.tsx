@@ -99,7 +99,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
 
   const onSubmit = (data: MentorFormData) => {
     addMentor({
-      alumniId: currentUser?._id || alumni[0]?._id || alumni[0]?.id || "1",
+      alumniId: currentUser?._id || alumni[0]?._id || "1",
       expertise: data.expertise,
       experience: data.experience ? String(data.experience) : undefined,
       availability: data.availability,
@@ -154,7 +154,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
         {filteredMentors.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredMentors.map((mentor) => {
-              if (mentor.id === undefined) return null
+              if (mentor._id === undefined) return null
               const alumniRecord = getAlumniForMentor(mentor.alumniId)
               const initials = alumniRecord 
                 ? `${alumniRecord.firstName[0]}${alumniRecord.lastName[0]}`
@@ -165,11 +165,11 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
               const title = alumniRecord 
                 ? `${alumniRecord.jobTitle || ""} · ${alumniRecord.company || ""}`.trim().replace(/^·\s*|·\s*$/g, "")
                 : ""
-              const hasRequested = hasRequestedMentorship(mentor.id)
+              const hasRequested = hasRequestedMentorship(mentor._id)
 
               return (
                 <div
-                  key={mentor.id}
+                  key={mentor._id}
                   className="bg-card border border-border rounded-xl p-5 transition-all hover:-translate-y-1 hover:shadow-lg hover:border-green-400"
                 >
                   {/* Header */}
@@ -180,7 +180,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
                     <div className="min-w-0">
                       <div 
                         className="font-bold text-base cursor-pointer hover:text-[var(--secondary)] truncate"
-                        onClick={() => alumniRecord && onViewProfile(alumniRecord._id || alumniRecord.id!)}
+                        onClick={() => alumniRecord && onViewProfile(alumniRecord._id)}
                       >
                         {name}
                       </div>
@@ -223,7 +223,7 @@ export function MentorshipSection({ onViewProfile }: MentorshipSectionProps) {
 
                   {/* Action Button */}
                   <button
-                    onClick={() => mentor.id !== undefined && handleRequestMentorship(mentor.id, name)}
+                    onClick={() => mentor._id !== undefined && handleRequestMentorship(mentor._id, name)}
                     disabled={hasRequested}
                     className={`w-full py-2 px-4 rounded-lg font-bold text-sm transition-all ${
                       hasRequested

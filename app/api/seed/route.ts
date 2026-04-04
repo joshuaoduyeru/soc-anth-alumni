@@ -163,7 +163,7 @@ export async function POST() {
       try {
         await Badge.create({
           recipient: alumniOnly[i]._id,
-          badgeType: BADGE_TYPES[i % BADGE_TYPES.length].id,
+          badgeType: BADGE_TYPES[i % BADGE_TYPES.length]._id,
           reason: 'Seeded badge for demo',
           awardedBy: adminUser?._id,
         })

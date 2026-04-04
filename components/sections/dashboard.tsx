@@ -29,7 +29,7 @@ export function DashboardSection({ onViewProfile }: DashboardSectionProps) {
   const recentActivity = [
     { text: "Platform launched with seed data", time: "Recently" },
     ...badges.slice(-3).reverse().map((b) => {
-      const al = alumni.find((a) => a.id === b.alumniId || a._id === b.alumniId)
+      const al = alumni.find((a) => a._id === b.alumniId)
       return {
         text: `Badge awarded to ${al?.firstName ?? "Alumni"} ${al?.lastName ?? ""}`.trim(),
         time: b.date ? new Date(b.date).toLocaleDateString() : "Recently",

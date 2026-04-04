@@ -276,11 +276,11 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
         {viewMode === "grid" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {paginatedAlumni.map((a) => {
-              const alBadges = getAlumniBadges(a._id || a.id)
+              const alBadges = getAlumniBadges(a._id)
               return (
                 <div
-                  key={a._id || a.id}
-                  onClick={() => onViewProfile(a._id || a.id!)}
+                  key={a._id}
+                  onClick={() => onViewProfile(a._id!)}
                   className="bg-card border border-border rounded-xl p-5 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg hover:border-[var(--secondary)]"
                 >
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--secondary)] to-orange-500 flex items-center justify-center text-xl font-bold text-white font-serif mb-3">
@@ -306,7 +306,7 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
                   {alBadges.length > 0 && (
                     <div className="flex gap-1 mt-2">
                       {alBadges.slice(0, 3).map((b) => {
-                        const def = BADGE_DEFINITIONS.find((d) => d.id === b.type)
+                        const def = BADGE_DEFINITIONS.find((d) => d._id === b.type)
                         return def ? (
                           <span key={b.id} title={def.name} className="text-base">
                             <Award className="h-4 w-4 text-[var(--secondary)]" />
@@ -357,8 +357,8 @@ export function DirectorySection({ onViewProfile }: DirectorySectionProps) {
               <tbody>
                 {paginatedAlumni.map((a) => (
                   <tr 
-                    key={a._id || a.id} 
-                    onClick={() => onViewProfile(a._id || a.id!)}
+                    key={a._id} 
+                    onClick={() => onViewProfile(a._id!)}
                     className="hover:bg-[var(--gold-pale)] cursor-pointer"
                   >
                     <td className="p-3 border-b border-border">

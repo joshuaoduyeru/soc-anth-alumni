@@ -65,7 +65,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
   const alumniRecord = alumni.find(
     (a) => a._id === currentUser?._id
   )
-  const alumniIdentifier = alumniRecord?._id ?? alumniRecord?.id
+  const alumniIdentifier = alumniRecord?._id
 
   const alumniBadges = alumniRecord
     ? badges.filter((b) => b.alumniId === alumniIdentifier)
@@ -80,7 +80,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
   )
 
   const mySavedJobs = jobs.filter(
-    (j) => j.id !== undefined && savedJobs.includes(j.id)
+    (j) => j._id !== undefined && savedJobs.includes(j._id)
   )
 
   const form = useForm<ProfileFormData>({
@@ -115,7 +115,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
 
   const onSubmit = (data: ProfileFormData) => {
     if (alumniRecord && currentUser) {
-      updateAlumni(alumniRecord._id ?? alumniRecord.id!, data)
+      updateAlumni(alumniRecord._id, data)
       const fullName = `${data.firstName} ${data.lastName}`
       setCurrentUser({
         ...currentUser,
@@ -276,14 +276,14 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                 {alumniBadges.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {alumniBadges.map((b) => {
-                      const def = BADGE_DEFINITIONS.find((d) => d.id === (b.type ?? b.badgeType))
+                      const def = BADGE_DEFINITIONS.find((d) => d._id === (b.type ?? b.badgeType))
                       return def ? (
                         <span
-                          key={b.id ?? b._id}
+                          key={b._id}
                           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--gold-pale)] border border-[var(--secondary)]/20 text-sm"
                         >
                           <span className="text-[var(--secondary)]">
-                            {badgeIcons[def.id] ?? <Award className="h-4 w-4" />}
+                            {badgeIcons[def._id] ?? <Award className="h-4 w-4" />}
                           </span>
                           <span>
                             <span className="font-bold text-xs">{def.name}</span>
@@ -328,9 +328,9 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                 {myEventRegs.length > 0 ? (
                   <div className="space-y-3">
                     {events
-                      .filter((e) => myEventRegs.some((r) => r.eventId === (e._id ?? e.id)))
+                      .filter((e) => myEventRegs.some((r) => r.eventId === (e._id)))
                       .map((event) => (
-                        <div key={event._id ?? event.id} className="flex justify-between items-center py-2.5 border-b border-border last:border-0">
+                        <div key={event._id} className="flex justify-between items-center py-2.5 border-b border-border last:border-0">
                           <div>
                             <div className="font-bold text-sm">{event.title}</div>
                             <div className="text-xs text-muted-foreground">
@@ -360,7 +360,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                 {mySavedJobs.length > 0 ? (
                   <div className="space-y-3">
                     {mySavedJobs.map((job) => (
-                      <div key={job._id ?? job.id} className="flex justify-between items-center py-2.5 border-b border-border last:border-0">
+                      <div key={job._id} className="flex justify-between items-center py-2.5 border-b border-border last:border-0">
                         <div>
                           <div className="font-bold text-sm">{job.title}</div>
                           <div className="text-xs text-muted-foreground">{job.company} · {job.type}</div>
@@ -381,8 +381,8 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              if (job.id !== undefined) {
-                                toggleSaveJob(job.id)
+                              if (job._id !== undefined) {
+                                toggleSaveJob(job._id)
                                 toast.success("Job removed from saved.")
                               }
                             }}
@@ -420,7 +420,7 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                   <div>
                     <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Requests received</div>
                     <div className="text-sm">
-                      {mentorRequests.filter((r) => r.mentorId === (mentor._id ?? mentor.id)).length}
+                      {mentorRequests.filter((r) => r.mentorId === (mentor._id)).length}
                     </div>
                   </div>
                 </div>

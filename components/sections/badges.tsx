@@ -54,15 +54,15 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
   // Badge catalogue with awarded counts
   const badgeCatalog = BADGE_DEFINITIONS.map((def) => ({
     ...def,
-    count: badges.filter((b) => (b.type ?? b.badgeType) === def.id).length,
+    count: badges.filter((b) => (b.type ?? b.badgeType) === def._id).length,
   }))
 
   // Leaderboard
   const leaderboard = alumni
     .map((a) => {
-      const alumniIdentifier = a._id ?? a.id
+      const alumniIdentifier = a._id
       const userBadges = badges.filter(
-        (b) => b.alumniId === alumniIdentifier || b.alumniId === a.id
+        (b) => b.alumniId === alumniIdentifier || b.alumniId === a._id
       )
       return { ...a, badgeCount: userBadges.length, userBadges }
     })
@@ -76,9 +76,9 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
 
   const onSubmit = async (data: BadgeFormData) => {
     const alumniRecord = alumni.find(
-      (a) => String(a._id ?? a.id) === data.alumniId
+      (a) => String(a._id) === data.alumniId
     )
-    const badgeDef = BADGE_DEFINITIONS.find((d) => d.id === data.type)
+    const badgeDef = BADGE_DEFINITIONS.find((d) => d._id === data.type)
 
     const success = await awardBadge({
       alumniId: data.alumniId,
@@ -130,11 +130,11 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {badgeCatalog.map((badge) => (
               <div
-                key={badge.id}
+                key={badge._id}
                 className="bg-card border border-border rounded-xl p-5 text-center transition-all hover:-translate-y-1 hover:shadow-lg hover:border-[var(--secondary)]"
               >
                 <div className="text-[var(--secondary)] mb-2 flex justify-center">
-                  {badgeIcons[badge.id] ?? <Award className="h-9 w-9" />}
+                  {badgeIcons[badge._id] ?? <Award className="h-9 w-9" />}
                 </div>
                 <div className="font-bold text-sm mb-1">{badge.name}</div>
                 {/* Use description — desc no longer exists */}
@@ -173,10 +173,10 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
                   </div>
                   <div className="flex gap-1">
                     {alumniRecord.userBadges.slice(0, 6).map((b) => {
-                      const def = BADGE_DEFINITIONS.find((d) => d.id === (b.type ?? b.badgeType))
+                      const def = BADGE_DEFINITIONS.find((d) => d._id === (b.type ?? b.badgeType))
                       return def ? (
-                        <span key={b.id ?? b._id} title={def.name} className="text-[var(--secondary)] [&>svg]:h-5 [&>svg]:w-5">
-                          {badgeIcons[def.id] ?? <Award />}
+                        <span key={b._id} title={def.name} className="text-[var(--secondary)] [&>svg]:h-5 [&>svg]:w-5">
+                          {badgeIcons[def._id] ?? <Award />}
                         </span>
                       ) : null
                     })}
@@ -218,7 +218,7 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
                   </SelectTrigger>
                   <SelectContent>
                     {alumni.map((a) => (
-                      <SelectItem key={a._id ?? a.id} value={String(a._id ?? a.id)}>
+                      <SelectItem key={a._id} value={String(a._id)}>
                         {a.firstName} {a.lastName}
                       </SelectItem>
                     ))}
@@ -239,7 +239,7 @@ export function BadgesSection({ onViewProfile }: BadgesSectionProps) {
                   </SelectTrigger>
                   <SelectContent>
                     {BADGE_DEFINITIONS.map((def) => (
-                      <SelectItem key={def.id} value={def.id}>
+                      <SelectItem key={def._id} value={def._id}>
                         {def.name} — {def.description}
                       </SelectItem>
                     ))}

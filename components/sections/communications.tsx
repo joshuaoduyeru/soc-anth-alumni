@@ -184,7 +184,7 @@ export function CommunicationsSection() {
                 <div className="space-y-3 max-h-[380px] overflow-y-auto pr-2">
                   {[...communications].reverse().map((comm) => (
                     <div
-                      key={comm.id}
+                      key={comm._id}
                       className="p-3 bg-[var(--gold-pale)] rounded-lg border-l-4 border-[var(--secondary)]"
                     >
                       <div className="flex justify-between items-start mb-2">

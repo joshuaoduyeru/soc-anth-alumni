@@ -124,10 +124,10 @@ export function EventsSection() {
     }
     
     if (editingEvent) {
-      updateEvent(editingEvent._id || editingEvent.id!, eventData)
+      updateEvent(editingEvent._id, eventData)
       toast.success("Event updated.")
     } else {
-      addEvent(eventData as Omit<Event, "id">)
+      addEvent(eventData as Omit<Event, "_id">)
       toast.success(`Event "${data.title}" created!`)
     }
     setIsModalOpen(false)
@@ -135,7 +135,7 @@ export function EventsSection() {
 
   const handleDelete = () => {
     if (deleteConfirm) {
-      deleteEvent(deleteConfirm._id || deleteConfirm.id!)
+      deleteEvent(deleteConfirm._id)
       toast.success("Event deleted.")
       setDeleteConfirm(null)
     }
@@ -210,7 +210,7 @@ export function EventsSection() {
         {filteredEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredEvents.map((event) => {
-              const eventId = event._id || event.id!
+              const eventId = event._id || event._id!
               const eventDate = new Date(event.date)
               const isPast = eventDate < new Date()
               const regs = getRegistrations(eventId)
