@@ -8,14 +8,14 @@ import { User, Badge, MentorProfile } from '@/models'
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ _id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB()
 
-    const { _id } = await params
+    const { id } = await params
 
-    const user = await User.findById(_id).select('-passwordHash').lean()
+    const user = await User.findById(id).select('-passwordHash').lean()
 
     if (!user) {
       return NextResponse.json(
@@ -55,15 +55,15 @@ export async function GET(
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ _id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB()
 
-    const { _id } = await params
+    const { id } = await params
     const body = await req.json()
 
-    const user = await User.findByIdAndUpdate(_id, body, { new: true })
+    const user = await User.findByIdAndUpdate(id, body, { new: true })
 
     if (!user) {
       return NextResponse.json(
