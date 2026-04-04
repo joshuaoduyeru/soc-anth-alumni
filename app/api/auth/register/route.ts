@@ -46,7 +46,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        id: user._id.toString(),
         _id: user._id.toString(),
         email: user.email,
         firstName: user.firstName,

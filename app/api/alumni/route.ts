@@ -17,7 +17,7 @@ export async function GET() {
 
     return NextResponse.json(
       alumni.map((user: any) => ({
-        id: user._id.toString(),
+        _id: user._id.toString(),
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        id: user._id.toString(),
+        _id: user._id.toString(),
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,

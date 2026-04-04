@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       jobs.map((job: any) => ({
-        id: job._id.toString(),
+        _id: job._id.toString(),
         title: job.title,
         company: job.company,
         description: job.description,
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        id: job._id.toString(),
+        _id: job._id.toString(),
         title: job.title,
         company: job.company,
         status: job.status,

@@ -8,15 +8,15 @@ import { Event, EventRegistration } from '@/models'
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ _id: string }> }
 ) {
   try {
     await connectDB()
 
-    const { id } = await params
+    const { _id } = await params
     const body = await req.json()
 
-    const event = await Event.findByIdAndUpdate(id, body, { new: true })
+    const event = await Event.findByIdAndUpdate(_id, body, { new: true })
 
     if (!event) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
@@ -25,7 +25,7 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       event: {
-        id: event._id.toString(),
+        _id: event._id.toString(),
         title: event.title,
         status: event.status,
       },
@@ -45,21 +45,21 @@ export async function PUT(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ _id: string }> }
 ) {
   try {
     await connectDB()
 
-    const { id } = await params
+    const { _id } = await params
 
-    const event = await Event.findByIdAndDelete(id)
+    const event = await Event.findByIdAndDelete(_id)
 
     if (!event) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
     }
 
     // Delete associated registrations
-    await EventRegistration.deleteMany({ event: id })
+    await EventRegistration.deleteMany({ event: _id })
 
     return NextResponse.json({ success: true })
   } catch (error) {

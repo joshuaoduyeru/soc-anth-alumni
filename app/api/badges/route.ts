@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       userBadges.map((badge: any) => ({
-        id: badge._id.toString(),
+        _id: badge._id.toString(),
         badgeType: badge.badgeType,
         reason: badge.reason,
         awardedAt: badge.awardedAt,
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json(
         {
-          id: badge._id.toString(),
+          _id: badge._id.toString(),
           badgeType: badge.badgeType,
           awardedAt: badge.awardedAt,
         },

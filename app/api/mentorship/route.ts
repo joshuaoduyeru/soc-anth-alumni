@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
       return NextResponse.json(
         mentors.map((mentor: any) => ({
-          id: mentor._id.toString(),
+          _id: mentor._id.toString(),
           user: mentor.user,
           expertise: mentor.expertise,
           expertiseTags: mentor.expertiseTags,
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
 
       return NextResponse.json(
         requests.map((req: any) => ({
-          id: req._id.toString(),
+          _id: req._id.toString(),
           mentor: req.mentor,
           mentee: req.mentee,
           message: req.message,
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json(
         {
-          id: request._id.toString(),
+          _id: request._id.toString(),
           status: request.status,
           createdAt: request.createdAt,
         },

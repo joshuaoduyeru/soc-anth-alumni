@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       events.map((event: any) => ({
-        id: event._id.toString(),
+        _id: event._id.toString(),
         title: event.title,
         description: event.description,
         startDate: event.startDate,
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        id: event._id.toString(),
+        _id: event._id.toString(),
         title: event.title,
         status: event.status,
       },

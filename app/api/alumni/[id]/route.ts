@@ -8,14 +8,14 @@ import { User, Badge, MentorProfile } from '@/models'
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ _id: string }> }
 ) {
   try {
     await connectDB()
 
-    const { id } = await params
+    const { _id } = await params
 
-    const user = await User.findById(id).select('-passwordHash').lean()
+    const user = await User.findById(_id).select('-passwordHash').lean()
 
     if (!user) {
       return NextResponse.json(
@@ -25,7 +25,7 @@ export async function GET(
     }
 
     return NextResponse.json({
-      id: user._id.toString(),
+      _id: user._id.toString(),
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -55,15 +55,15 @@ export async function GET(
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ _id: string }> }
 ) {
   try {
     await connectDB()
 
-    const { id } = await params
+    const { _id } = await params
     const body = await req.json()
 
-    const user = await User.findByIdAndUpdate(id, body, { new: true })
+    const user = await User.findByIdAndUpdate(_id, body, { new: true })
 
     if (!user) {
       return NextResponse.json(
@@ -75,7 +75,7 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       user: {
-        id: user._id.toString(),
+        _id: user._id.toString(),
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -96,14 +96,14 @@ export async function PUT(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ _id: string }> }
 ) {
   try {
     await connectDB()
 
-    const { id } = await params
+    const { _id } = await params
 
-    const user = await User.findByIdAndDelete(id)
+    const user = await User.findByIdAndDelete(_id)
 
     if (!user) {
       return NextResponse.json(
@@ -114,8 +114,8 @@ export async function DELETE(
 
     // Clean up related records
     await Promise.all([
-      Badge.deleteMany({ recipient: id }),
-      MentorProfile.deleteOne({ user: id }),
+      Badge.deleteMany({ recipient: _id }),
+      MentorProfile.deleteOne({ user: _id }),
     ])
 
     return NextResponse.json({ success: true })

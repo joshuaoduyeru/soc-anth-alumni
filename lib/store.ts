@@ -9,7 +9,6 @@ export { BADGE_TYPES as BADGE_DEFINITIONS }
 // ─── Shared types ────────────────────────────────────────────────────────────
 
 export interface User {
-  id: string
   _id?: string
   email: string
   firstName: string
@@ -25,7 +24,6 @@ export interface User {
 }
 
 export type Alumni = {
-  id?: string | number
   _id?: string
   firstName: string
   lastName: string
@@ -43,7 +41,6 @@ export type Alumni = {
 }
 
 export type Event = {
-  id?: string | number
   _id?: string
   title: string
   date: string
@@ -56,7 +53,6 @@ export type Event = {
 }
 
 export type Job = {
-  id?: string | number
   _id?: string
   title: string
   company: string
@@ -70,9 +66,8 @@ export type Job = {
 }
 
 export type Badge = {
-  id?: string | number
   _id?: string
-  alumniId?: string | number
+  alumniId?: string
   type?: string
   badgeType?: string
   reason?: string
@@ -82,9 +77,8 @@ export type Badge = {
 }
 
 export type Mentor = {
-  id?: string | number
   _id?: string
-  alumniId?: string | number
+  alumniId?: string
   expertise: string
   experience?: string | number
   availability: 'Weekly' | 'Bi-weekly' | 'Monthly'
@@ -94,25 +88,22 @@ export type Mentor = {
 }
 
 export type MentorRequest = {
-  id?: string | number
   _id?: string
-  mentorId?: string | number
-  userId?: string | number
-  menteeId?: string | number
+  mentorId?: string
+  userId?: string
+  menteeId?: string
   status?: string
   [key: string]: any
 }
 
 export type EventRegistration = {
-  id?: string | number
   _id?: string
-  eventId?: string | number
-  userId?: string | number
+  eventId?: string
+  userId?: string
   [key: string]: any
 }
 
 export type Communication = {
-  id?: string | number
   _id?: string
   subject: string
   body: string
@@ -150,7 +141,7 @@ interface AlumniStore {
   mentorRequests: MentorRequest[]
   eventRegistrations: EventRegistration[]
   communications: Communication[]
-  savedJobs: (string | number)[]
+  savedJobs: string[]
 
   // ── Loading / error ────────────────────────────────────────────────────────
   isLoading: boolean
@@ -188,7 +179,7 @@ interface AlumniStore {
   awardBadge: (data: { alumniId: string | number; type: string; reason?: string }) => Promise<boolean>
 
   // ── Mentors ────────────────────────────────────────────────────────────────
-  addMentor: (data: Omit<Mentor, 'id' | '_id'>) => void
+  addMentor: (data: Omit<Mentor, '_id'>) => void
   requestMentorship: (mentorId: string | number, userId: string | number | null) => void
 
   // ── Event registration ─────────────────────────────────────────────────────
@@ -205,7 +196,7 @@ interface AlumniStore {
   }) => Promise<boolean>
 
   // ── Job save ───────────────────────────────────────────────────────────────
-  toggleSaveJob: (jobId: string | number) => Promise<boolean>
+  toggleSaveJob: (jobId: string) => Promise<boolean>
 
   // ── Admin ──────────────────────────────────────────────────────────────────
   promoteToAdmin: (userId: string) => Promise<boolean>
@@ -418,7 +409,7 @@ export const useAlumniStore = create<AlumniStore>()(
         try {
           await fetch(`/api/alumni/${id}`, { method: 'DELETE' })
           set((state) => ({
-            alumni: state.alumni.filter((a) => a._id !== id && a.id !== id),
+            alumni: state.alumni.filter((a) => a._id !== id),
           }))
         } catch (error) {
           console.error('Failed to delete alumni:', error)
@@ -461,7 +452,7 @@ export const useAlumniStore = create<AlumniStore>()(
         try {
           await fetch(`/api/events/${id}`, { method: 'DELETE' })
           set((state) => ({
-            events: state.events.filter((e) => e._id !== id && e.id !== id),
+            events: state.events.filter((e) => e._id !== id),
           }))
         } catch (error) {
           console.error('Failed to delete event:', error)
@@ -504,7 +495,7 @@ export const useAlumniStore = create<AlumniStore>()(
         try {
           await fetch(`/api/jobs/${id}`, { method: 'DELETE' })
           set((state) => ({
-            jobs: state.jobs.filter((j) => j._id !== id && j.id !== id),
+            jobs: state.jobs.filter((j) => j._id !== id),
           }))
         } catch (error) {
           console.error('Failed to delete job:', error)

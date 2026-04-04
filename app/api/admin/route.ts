@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       admins.map((admin: any) => ({
-        id: admin._id.toString(),
+        _id: admin._id.toString(),
         firstName: admin.firstName,
         lastName: admin.lastName,
         email: admin.email,
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
       targetId: user._id,
       newState: {
         role: 'admin',
-        id: user._id.toString(),
+        _id: user._id.toString(),
       },
     }).catch(console.error)
 
@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
       success: true,
       message: 'User promoted to admin',
       user: {
-        id: user._id.toString(),
+        _id: user._id.toString(),
         email: user.email,
         name: user.fullName,
         role: user.role,
@@ -199,7 +199,7 @@ export async function DELETE(req: NextRequest) {
       targetId: user._id,
       newState: {
         role: 'alumni',
-        id: user._id.toString(),
+        _id: user._id.toString(),
       },
     }).catch(console.error)
 
@@ -207,7 +207,7 @@ export async function DELETE(req: NextRequest) {
       success: true,
       message: 'Admin privileges removed',
       user: {
-        id: user._id.toString(),
+        _id: user._id.toString(),
         email: user.email,
         name: user.fullName,
         role: user.role,

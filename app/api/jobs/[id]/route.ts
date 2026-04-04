@@ -24,7 +24,7 @@ export async function GET(
     }
 
     return NextResponse.json({
-      id: job._id.toString(),
+      _id: job._id.toString(),
       title: job.title,
       company: job.company,
       description: job.description,
@@ -58,7 +58,7 @@ export async function PUT(
   try {
     await connectDB()
 
-    const { id } = await params
+    const { id: id } = await params
     const body = await req.json()
 
     const job = await Job.findByIdAndUpdate(id, body, { new: true })
@@ -70,7 +70,7 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       job: {
-        id: job._id.toString(),
+        _id: job._id.toString(),
         title: job.title,
         company: job.company,
       },
@@ -95,7 +95,7 @@ export async function DELETE(
   try {
     await connectDB()
 
-    const { id } = await params
+    const { id: id } = await params
 
     const job = await Job.findByIdAndDelete(id)
 
