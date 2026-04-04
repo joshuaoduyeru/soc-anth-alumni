@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { useAlumniStore } from "@/lib/store"
+import { UserProfileDropdown } from "@/components/user-profile-dropdown"
 
 // Sections
 import { DashboardSection } from "@/components/sections/dashboard"
@@ -31,7 +31,7 @@ type Section =
 export function AppShell() {
   const [activeSection, setActiveSection] = useState<Section>("dashboard")
   const [viewingProfileId, setViewingProfileId] = useState<number | string | null>(null)
-  const { currentUser, logout } = useAlumniStore()
+  const { currentUser } = useAlumniStore()
 
   const navItems: { id: Section; label: string }[] = [
     { id: "dashboard", label: "Dashboard" },
@@ -44,15 +44,6 @@ export function AppShell() {
     { id: "reports", label: "Reports" },
     { id: "my-profile", label: "My Profile" },
   ]
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((w) => w[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2)
-  }
 
   const handleViewProfile = (id: number | string) => {
     setViewingProfileId(id)
@@ -72,14 +63,21 @@ export function AppShell() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--cream)' }}>
       {/* Top Bar */}
-      <header className="bg-[var(--primary)] h-16 flex items-center px-4 lg:px-9 gap-2 sticky top-0 z-50 border-b border-white/5">
+      <header 
+        className="h-16 flex items-center px-4 lg:px-9 gap-2 sticky top-0 z-50 border-b"
+        style={{
+          backgroundColor: 'var(--ink)',
+          borderBottomColor: 'rgba(255,255,255,0.06)',
+        }}
+      >
         <div 
-          className="font-serif text-lg font-black text-white cursor-pointer whitespace-nowrap mr-4"
+          className="font-serif text-lg font-black cursor-pointer whitespace-nowrap mr-4"
           onClick={() => setActiveSection("dashboard")}
+          style={{ color: 'var(--cream)' }}
         >
-          OAU-<span className="text-[var(--secondary)]">SAN</span>
+          OAU-<span style={{ color: 'var(--gold)' }}>SAN</span>
         </div>
 
         {/* Navigation */}
@@ -91,9 +89,14 @@ export function AppShell() {
               className={cn(
                 "px-3 py-2 text-sm font-medium rounded-md transition-all whitespace-nowrap",
                 activeSection === item.id
-                  ? "bg-[var(--secondary)]/20 text-[var(--gold-light)]"
+                  ? "text-white"
                   : "text-white/55 hover:bg-white/10 hover:text-white"
               )}
+              style={
+                activeSection === item.id
+                  ? { backgroundColor: 'rgba(200, 150, 62, 0.18)', color: 'var(--gold-l)' }
+                  : {}
+              }
             >
               {item.label}
             </button>
@@ -102,38 +105,36 @@ export function AppShell() {
 
         {/* Right side */}
         <div className="flex items-center gap-3 ml-auto">
-          <div className="w-9 h-9 rounded-full bg-[var(--secondary)] flex items-center justify-center font-bold text-sm text-[var(--primary)]">
-            {currentUser ? getInitials(currentUser.name) : "?"}
-          </div>
-          <span className="hidden lg:block text-sm text-white/75 whitespace-nowrap">
-            {currentUser?.name}
-          </span>
-          <span className="hidden lg:block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[var(--secondary)]/20 text-[var(--gold-light)]">
-            {currentUser?.role}
-          </span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={logout}
-            className="text-white/60 border border-white/15 hover:bg-white/10 hover:text-white"
-          >
-            Sign out
-          </Button>
+          <UserProfileDropdown />
         </div>
       </header>
 
       {/* Mobile Navigation */}
-      <nav className="md:hidden flex gap-1 p-2 bg-[var(--primary)] overflow-x-auto border-b border-white/5">
+      <nav 
+        className="md:hidden flex gap-1 p-2 overflow-x-auto border-b"
+        style={{
+          backgroundColor: 'var(--ink)',
+          borderBottomColor: 'rgba(255,255,255,0.06)',
+        }}
+      >
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setActiveSection(item.id)}
             className={cn(
-              "px-3 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap",
-              activeSection === item.id
-                ? "bg-[var(--secondary)]/20 text-[var(--gold-light)]"
-                : "text-white/55 hover:bg-white/10 hover:text-white"
+              "px-3 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap"
             )}
+            style={
+              activeSection === item.id
+                ? { 
+                    backgroundColor: 'rgba(200, 150, 62, 0.18)',
+                    color: 'var(--gold-l)',
+                  }
+                : {
+                    backgroundColor: 'transparent',
+                    color: 'rgba(255,255,255,0.55)',
+                  }
+            }
           >
             {item.label}
           </button>

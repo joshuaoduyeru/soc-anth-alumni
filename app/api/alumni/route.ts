@@ -1,81 +1,133 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDatabase, COLLECTIONS } from '@/lib/mongodb'
-import { ObjectId } from 'mongodb'
-import bcrypt from 'bcryptjs'
-import type { AlumniDoc } from '@/lib/types'
+import { connectDB } from '@/lib/mongoose'
+import { User } from '@/models'
 
-// GET all alumni
+/**
+ * GET /api/alumni
+ * Fetch all alumni users
+ */
 export async function GET() {
   try {
-    const db = await getDatabase()
-    const alumni = await db
-      .collection<AlumniDoc>(COLLECTIONS.ALUMNI)
-      .find({})
+    await connectDB()
+
+    const alumni = await User.find({ role: 'alumni' })
+      .select('-passwordHash')
       .sort({ createdAt: -1 })
-      .toArray()
-    
-    // Transform _id to id for frontend
-    const transformedAlumni = alumni.map(({ _id, password, ...rest }) => ({
-      id: _id!.toString(),
-      ...rest
-    }))
-    
-    return NextResponse.json(transformedAlumni)
+      .lean()
+
+    return NextResponse.json(
+      alumni.map((user: any) => ({
+        id: user._id.toString(),
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: `${user.firstName} ${user.lastName}`,
+        role: user.role,
+        isActive: user.isActive,
+        avatarUrl: user.avatarUrl,
+        jobTitle: user.jobTitle,
+        company: user.company,
+        location: user.location,
+        bio: user.bio,
+        education: user.education,
+        createdAt: user.createdAt,
+      }))
+    )
   } catch (error) {
     console.error('Failed to fetch alumni:', error)
-    return NextResponse.json({ error: 'Failed to fetch alumni' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to fetch alumni' },
+      { status: 500 }
+    )
   }
 }
 
-// POST new alumni (registration)
+/**
+ * POST /api/alumni
+ * Register a new alumni user
+ */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
-    const { firstName, lastName, email, password, year, degree, major, ...rest } = body
-    
-    const db = await getDatabase()
-    
-    // Check if email exists
-    const existing = await db
-      .collection<AlumniDoc>(COLLECTIONS.ALUMNI)
-      .findOne({ email: email.toLowerCase() })
-    
+    await connectDB()
+
+    const {
+      firstName,
+      lastName,
+      email,
+      passwordHash,
+      jobTitle,
+      company,
+      location,
+      bio,
+      education,
+      skills,
+      interests,
+    } = await req.json()
+
+    // Validate required fields
+    if (!firstName || !lastName || !email || !passwordHash) {
+      return NextResponse.json(
+        {
+          error: 'Missing required fields: firstName, lastName, email, passwordHash',
+        },
+        { status: 400 }
+      )
+    }
+
+    // Check if email already exists
+    const existing = await User.findOne({ email: email.toLowerCase() })
     if (existing) {
-      return NextResponse.json({ error: 'Email already registered' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Email already registered' },
+        { status: 409 }
+      )
     }
-    
-    // Hash password if provided
-    const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined
-    
-    const doc: AlumniDoc = {
+
+    // Create new user
+    const user = await User.create({
       firstName,
       lastName,
       email: email.toLowerCase(),
-      password: hashedPassword,
-      year,
-      degree,
-      major,
+      passwordHash,
       role: 'alumni',
-      ...rest,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }
-    
-    const result = await db.collection<AlumniDoc>(COLLECTIONS.ALUMNI).insertOne(doc)
-    
-    return NextResponse.json({ 
-      id: result.insertedId.toString(),
-      firstName,
-      lastName,
-      email: email.toLowerCase(),
-      year,
-      degree,
-      major,
-      role: 'alumni',
-      ...rest
-    }, { status: 201 })
-  } catch (error) {
+      isActive: true,
+      jobTitle: jobTitle || null,
+      company: company || null,
+      location: location || null,
+      bio: bio || null,
+      education: education || [],
+      skills: skills || [],
+      interests: interests || [],
+      notificationPreferences: {
+        emailOnEvent: true,
+        emailOnJobPost: true,
+        emailOnMentorship: true,
+        emailOnNewsletter: true,
+        emailOnBadge: true,
+      },
+    })
+
+    return NextResponse.json(
+      {
+        id: user._id.toString(),
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
+      { status: 201 }
+    )
+  } catch (error: any) {
     console.error('Failed to create alumni:', error)
-    return NextResponse.json({ error: 'Failed to create alumni' }, { status: 500 })
+    if (error.code === 11000) {
+      return NextResponse.json(
+        { error: 'Email already exists' },
+        { status: 409 }
+      )
+    }
+    return NextResponse.json(
+      { error: 'Failed to create alumni' },
+      { status: 500 }
+    )
   }
 }
