@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate badge type
-    const validBadgeType = BADGE_TYPES.find((t) => t._id === badgeType)
+    const validBadgeType = BADGE_TYPES.find((t) => t.id === badgeType)
     if (!validBadgeType) {
       return NextResponse.json(
         { error: 'Invalid badge type' },

@@ -276,14 +276,14 @@ export function MyProfileSection({ onViewProfile }: MyProfileSectionProps) {
                 {alumniBadges.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {alumniBadges.map((b) => {
-                      const def = BADGE_DEFINITIONS.find((d) => d._id === (b.type ?? b.badgeType))
+                      const def = BADGE_DEFINITIONS.find((d) => d.id === (b.type ?? b.badgeType))
                       return def ? (
                         <span
-                          key={b._id}
+                          key={b.id}
                           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--gold-pale)] border border-[var(--secondary)]/20 text-sm"
                         >
                           <span className="text-[var(--secondary)]">
-                            {badgeIcons[def._id] ?? <Award className="h-4 w-4" />}
+                            {badgeIcons[def.id] ?? <Award className="h-4 w-4" />}
                           </span>
                           <span>
                             <span className="font-bold text-xs">{def.name}</span>

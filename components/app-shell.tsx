@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { useAlumniStore } from "@/lib/store"
 import { UserProfileDropdown } from "@/components/user-profile-dropdown"
@@ -31,7 +31,7 @@ type Section =
 export function AppShell() {
   const [activeSection, setActiveSection] = useState<Section>("dashboard")
   const [viewingProfileId, setViewingProfileId] = useState<string | null>(null)
-  const { currentUser } = useAlumniStore()
+  const { fetchAlumni, fetchEvents, fetchJobs, fetchBadges, fetchMentors, currentUser } = useAlumniStore()
 
   const navItems: { id: Section; label: string }[] = [
     { id: "dashboard", label: "Dashboard" },
@@ -61,6 +61,16 @@ export function AppShell() {
       />
     )
   }
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchAlumni()
+      fetchEvents()
+      fetchJobs()
+      fetchBadges()
+      fetchMentors()
+    }
+  }, [currentUser])
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--cream)' }}>

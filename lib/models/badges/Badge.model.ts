@@ -34,7 +34,7 @@ const BadgeSchema = new Schema<IBadge>(
     badgeType: {
       type: String,
       required: [true, 'Badge type is required'],
-      enum: BADGE_TYPES.map((bt) => bt._id),
+      enum: BADGE_TYPES.map((bt) => bt.id),
     },
     reason: {
       type: String,

@@ -219,11 +219,11 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
               {alumniBadges.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {alumniBadges.map((b) => {
-                    const def = BADGE_DEFINITIONS.find((d) => d._id === (b.type ?? b.badgeType))
+                    const def = BADGE_DEFINITIONS.find((d) => d.id === (b.type ?? b.badgeType))
                     return def ? (
-                      <span key={b._id} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--gold-pale)] border border-[var(--secondary)]/20 text-sm">
+                      <span key={b.id} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--gold-pale)] border border-[var(--secondary)]/20 text-sm">
                         <span className="text-[var(--secondary)]">
-                          {badgeIcons[def._id] ?? <Award className="h-4 w-4" />}
+                          {badgeIcons[def.id] ?? <Award className="h-4 w-4" />}
                         </span>
                         <span>
                           <span className="font-bold text-xs">{def.name}</span>
@@ -296,14 +296,14 @@ export function ProfileDetail({ alumniId, onBack }: ProfileDetailProps) {
               </div>
               <div className="p-5 space-y-5">
                 {alumniBadges.map((b, index) => {
-                  const def = BADGE_DEFINITIONS.find((d) => d._id === (b.type ?? b.badgeType))
+                  const def = BADGE_DEFINITIONS.find((d) => d.id === (b.type ?? b.badgeType))
                   return def ? (
-                    <div key={b._id} className="flex gap-3.5 relative">
+                    <div key={b.id} className="flex gap-3.5 relative">
                       {index < alumniBadges.length - 1 && (
                         <div className="absolute left-[15px] top-[30px] bottom-0 w-0.5 bg-border" />
                       )}
                       <div className="w-8 h-8 rounded-full bg-[var(--gold-pale)] border-2 border-[var(--secondary)] flex items-center justify-center shrink-0 z-10 text-[var(--secondary)]">
-                        {badgeIcons[def._id] ?? <Award className="h-3.5 w-3.5" />}
+                        {badgeIcons[def.id] ?? <Award className="h-3.5 w-3.5" />}
                       </div>
                       <div className="pt-0.5">
                         <div className="font-bold text-sm">{def.name}</div>
